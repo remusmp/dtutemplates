@@ -1,0 +1,91 @@
+% Copyright 2007 by Till Tantau
+% Copyright 2010 by Remus Mihail Prunescu
+
+% LaTeX Support Group 2010
+% DTU Official Presentation
+
+\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/font/beamerfontthemeDTU.sty,v 1.4 2007/01/28 20:48:29 tantau Exp $
+
+
+% For PDFLATEX
+\usefonttheme{professionalfonts}
+\renewcommand{\Tiny}{\fontsize{4.5pt}{4pt}}
+\renewcommand{\small}{\fontsize{8.06pt}{8pt}}
+\renewcommand{\large}{\fontsize{12.09pt}{12pt}}
+\linespread{1.2}
+%\ifthenelse{\equal{\inFontType}{verdana}}
+%{
+%	% Only with MikTeX
+%	\usepackage{verdana}
+%	\renewcommand{\Tiny}{\fontsize{4.5pt}{4pt}}
+%	\renewcommand{\small}{\fontsize{8.06pt}{8pt}}
+%	\renewcommand{\large}{\fontsize{12.09pt}{12pt}}
+%	\linespread{1.2}
+%}
+%{
+%	\ifthenelse{\equal{\inFontType}{helvetica}}
+%	{
+%		\usepackage{helvet}
+%		\renewcommand{\Tiny}{\fontsize{4.5pt}{4pt}}
+%		\renewcommand{\small}{\fontsize{8.06pt}{8pt}}
+%		\renewcommand{\large}{\fontsize{12.09pt}{12pt}}
+%		\linespread{1.2}
+%	}
+%	{
+%		\usepackage{times}
+%	}
+%}
+
+% End of PDFLATEX
+
+% For XELATEX
+%\usepackage{fontspec}
+%\setsansfont{Verdana}
+% End of XELATEX
+
+% MinionPro FONT
+%\usepackage{MinionPro}
+
+% Title font
+
+\setbeamerfont{title}{size=\large, series=\bfseries}
+\setbeamercolor{title}{fg=black}
+
+% Subtitle font
+\setbeamerfont{subtitle}{size=\small, series=\normalfont}
+
+% Author font
+\setbeamerfont{author}{size=\small, series=\normalfont}
+
+% Footline
+\setbeamerfont{framecounter in head/foot}{size=\Tiny}
+\setbeamerfont{department in head/foot}{size=\Tiny, series=\bfseries}
+\setbeamerfont{title in head/foot}{size=\Tiny}
+\setbeamerfont{date in head/foot}{size=\Tiny}
+
+% Frametitle
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{block body}{size=\small}
+\setbeamerfont{section title}{size=\small}
+\setbeamerfont{block body alerted}{size=\small}
+\setbeamerfont{block body example}{size=\small}
+\setbeamerfont{block title}{size=\large,parent={structure,block body}}
+\setbeamerfont{block title alerted}{parent={block title,alerted text}}
+\setbeamerfont{block title example}{parent={block title,example text}}
+\setbeamerfont{itemize/enumerate body}{size=\small}
+
+% Colors
+\setbeamercolor{frametitle}{fg=black}
+\setbeamercolor{structure}{fg=black}
+
+% Set font colors for title page in case a background is used
+\ifthenelse{\equal{\inBackground}{empty}}
+{
+	% Use defaults
+}
+{
+	\setbeamercolor{title}{fg=white}
+	\setbeamercolor{subtitle}{fg=white}
+	\setbeamercolor{author}{fg=white}
+	\setbeamercolor{institute}{fg=white}
+}

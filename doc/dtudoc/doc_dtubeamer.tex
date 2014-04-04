@@ -1,0 +1,165 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathpazo}
+\usepackage[hmargin=2.5cm, vmargin=3cm]{geometry}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+\usepackage{float}
+\usepackage{listings}
+
+\lstdefinelanguage{latex}
+{
+        morekeywords={\documentclass, \usetheme},
+        sensitive=false,
+        morecomment=[l]{\%},
+        morestring=[b]",
+}
+\lstset{language=latex, numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt,frame=single,basicstyle=\small}
+
+
+\title{\textsc{DTU Beamer}}
+\author{\textsc{\LaTeX\ Support Group}}
+\date{Version 0.6}
+
+
+\begin{document}
+        \maketitle
+        \section{Installation Guide}
+        \begin{enumerate}
+                \item Unzip {\color{red} dtulatex.zip} to any \textbf{PATH} (e.g. {\color{blue}C:/Program Files})
+                \item Now make sure the LaTeX compiler can find it:
+                \begin{enumerate}
+                        \item If you are using MiKTeX then do these steps:
+                        \begin{enumerate}
+                                \item Open {\color{red}Settings} window which you can find in
+                                
+                                {\color{blue} Start/All Programs/MiKTeX 2.9/Maintenance/Settings}
+                                \item MiKTeX Options appear, open the {\color{blue}Roots} tab and click on {\color{blue}Add}
+                                \item Browse to where you have unzipped the archive i.e. \textbf{PATH} and select the folder {\color{red} dtulatex}
+                                \item Go to the {\color{blue}General} tab and click on {\color{red}Refresh FNDB}
+                        \end{enumerate}
+                        \item If you are using a distribution that is not listed above then you could add the compiler option
+                        
+                        {\color{blue}-include\_directory=\textbf{``PATH/dtulatex''}}
+                \end{enumerate}
+        \end{enumerate}
+        
+        \section{Tutorial}
+        \begin{enumerate}
+                \item Choose the Beamer document class:
+                
+                \begin{lstlisting}[name=code]
+\documentclass{beamer}
+                \end{lstlisting}
+                
+                \item Set the DTU theme:
+                \begin{lstlisting}[name=code,firstnumber=auto]
+\usetheme[options]{DTU}
+                \end{lstlisting}
+                where \textit{options} may be any items from the following ones separated by a comma:
+
+                        \subitem {\color{blue}department=}name (see table \ref{tab:deps})
+                        \subitem {\color{blue}language=english} or {\color{blue}danish} (default)
+                        \subitem {\color{blue}background=\#} where {\color{blue}\#} can be {\color{blue}$01$}, {\color{blue}$02$} or {\color{blue}$03$} (default is empty)
+                        \subitem {\color{blue}font=verdana} or {\color{blue}helvetica} (default)
+                        \subitem {\color{blue}vcenter=true} or {\color{blue}false} (default)
+                        \subitem {\color{blue}placetitle=header} or {\color{blue}belowheader} (default)
+                        \subitem {\color{blue}showsection=true} or {\color{blue}false} (default)
+
+                Please notice that the \textit{default} options may be omitted. The \textit{default} options are: Danish language, no background, helvetica font, top aligned contents and the title of the frame is placed underneath the header.
+                
+                Example 1:
+                Choose the Elektro department and leave the other options to their default values:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=elektro]{DTU}
+                \end{lstlisting}
+                
+                Example 2:
+                Choose the Space department and change the language of the predefined strings (department and university names) to English:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=space, language=english]{DTU}
+                \end{lstlisting}
+                
+                Example 3:
+                Choose the Kemiteknik department, change the language to English and set the background to the first predefined image:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=kemiteknik, language=english, background=01]{DTU}
+                \end{lstlisting}
+                
+                Example 4:
+                Choose the Food department, change the language to English, set the background to the first predefined image and change the font type to Verdana (please notice that you must have Verdana installed):
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=food, language=english, background=01, font=verdana]{DTU}
+                \end{lstlisting}
+                
+                Example 5:
+                Choose the Elektro department, set the language to English and vertical align the contents of the frame:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=elektro, language=english, vcenter=true]{DTU}
+                \end{lstlisting}
+                
+                Example 6:
+                Choose the Elektro department, set language to English, vertical align the contents of the frame and print the section title above the frame title:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=elektro,language=english,vcenter=true,showsection=true]{DTU}
+                \end{lstlisting}
+                
+                Example 7:
+                Choose the Elektro department, vertical align the contents of the frame and place the title in the header:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=elektro, vcenter=true, placetitle=header]{DTU}
+                \end{lstlisting}
+                
+                You can also extend the backgrounds by adding your own pictures. The option that you put in \textit{background} is appended to the string {\color{blue}background}. Rename your background image file accordingly and copy it to {\color{blue}dtulatex/tex/latex/dturesources/dtu\_backgrounds}. Example:
+                
+                Given the new background {\color{blue}backgroundMyPic.png}, the option background should be set to:
+                \begin{lstlisting}[name=code,firstnumber=2]
+\usetheme[department=elektro, language=english, background=MyPic]{DTU}
+                \end{lstlisting}
+                
+                \pagebreak
+                \item Here is a list with the available departments. Set this option to one of the strings in the first left column:
+                
+                \begin{table}[H]
+                \centering
+                \begin{tabular}{lll}
+                        Department Option&Name in Danish&Name in English\\\hline\hline
+                        aqua&DTU Aqua&DTU Aqua\\
+                        bibliotek&DTU Bibliotek&DTU Library\\
+                        business&DTU Business&DTU Business\\
+                        byg&DTU Byg&DTU Civil Engeneering\\
+                        cen&DTU Cen&DTU Cen\\
+                        compute&DTU Compute&DTU Compute\\
+                        diplom&DTU Diplom&DTU Diplom\\
+                        danchip&DTU Danchip&DTU Danchip\\
+                        admin&&\\
+                        elektro&DTU Elektro&DTU Electrical Engineering\\
+                        fodevareinstituttet&DTU F\o devareinstituttet&National Food Institute\\
+                        fotonik&DTU Fotonik&DTU Fotonik\\
+                        fysik&DTU Fysik&DTU Physics\\
+                        informatik&DTU Informatik&DTU Informatics\\
+                        kemi&DTU Kemi&DTU Chemistry\\
+                        kemiteknik&DTU Kemiteknik&DTU Chemical Engineering\\
+                        management&DTU Management&DTU Management Engineering\\
+                        matematik&DTU Matematik&DTU Mathematics\\
+                        mekanik&DTU Mekanik&DTU Mechanical Engineering\\
+                        miljo&DTU Milj\o&DTU Environment\\
+                        nanotek&DTU Nanotek&DTU Nanotech\\
+                        riso & Risø DTU & Risø DTU\\
+                        space&DTU Space&DTU Space\\
+                        systembiologi&DTU Systembiologi&DTU Systems Biology\\
+                        transport&DTU Transport&DTU Transport\\
+                        vaterinaerinstituttet&DTU Veterin\ae rinstituttet&National Veterinary Institute\\
+                        food&DTU Veterin\ae rinstituttet&National Food Institute\\
+                        vindenergi & DTU Vindenergi & DTU Wind Energy\\
+                        diplom & DTU Diplom & DTU Diplom\\
+                        compute & DTU Compute & DTU Compute
+                \end{tabular}
+                \label{tab:deps}
+                \end{table}
+        \end{enumerate}
+        
+        Please refer to the working example included in the package.
+\end{document}

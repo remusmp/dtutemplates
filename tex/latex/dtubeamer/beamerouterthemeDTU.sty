@@ -1,0 +1,129 @@
+% Copyright 2007 by Till Tantau
+% Copyright 2010 by Remus Mihail Prunescu
+
+% LaTeX Support Group 2010
+% DTU Official Presentation
+
+\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/outer/beamerouterthemeDTU.sty,v 1.14 2007/01/28 20:48:30 tantau Exp $
+
+
+\mode<presentation>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set colors for the elements that are displayed in the footline:
+%		- the frame counter;
+%		- the department and the university;
+%		- the title of the presentation;
+%		- the current date.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamercolor*{framecounter in head/foot}{parent=palette tertiary}
+\setbeamercolor*{department in head/foot}{parent=palette tertiary}
+\setbeamercolor*{title in head/foot}{parent=palette tertiary}
+\setbeamercolor*{date in head/foot}{parent=palette tertiary}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% No navigation symbols.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{navigation symbols}{} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Display in the headline:
+%		- the logo;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamertemplate{headline}
+{
+	\ifthenelse{\equal{\bInTitle}{true}}
+	{
+		\insertTitleDTULogo
+	}
+	{
+		\insertFrameDTULogo
+	}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Display in the footline:
+%		- the frame counter;
+%		- the department and the university;
+%		- the title of the presentation;
+%		- the current date.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamertemplate{footline}
+{
+	%\leavevmode%
+	\ifthenelse{\equal{\bInTitle}{true}}
+	{
+		\ifthenelse{\equal{\inBackground}{empty}}
+		{
+			\vspace{-0.35\paperheight}
+			\begin{beamercolorbox}[wd=\paperwidth]{title bottom}			  
+			  \vbox{%
+			    \makebox[0pt][l]{\hspace{\dimDTUDepLogoXOffset}\insertdepartmentlogoA}%
+			    \vbox{%
+			      \hspace{\dimDTUFriseXOffset}%
+			      \makebox[0pt][l]{\insertDTUFrise}%
+			      \vspace{\dimDTUDepFriseOffset}%
+			    }%
+			  }%
+			  \vspace{\dimDTUFriseYOffset}
+			\end{beamercolorbox}
+		}
+		{
+		}
+		
+		\global\edef\bInTitle{false}
+	}
+	{
+		\hbox{%
+			% The frame counter
+			\hspace{\dimFootlineXOffset}
+			\begin{beamercolorbox}[wd=0.041\paperwidth, left]{framecounter in head/foot}%
+				\usebeamerfont{framecounter in head/foot}\insertframenumber{}
+			\end{beamercolorbox}%
+			  
+			% The department and the university
+			\begin{beamercolorbox}[wd=.45\paperwidth, left]{department in head/foot}%
+			  \usebeamerfont{department in head/foot}\insertdepartmentandinstitute
+			\end{beamercolorbox}%
+			  
+			% The title of the presentation
+			\begin{beamercolorbox}[wd=.245\paperwidth, right]{title in head/foot}%
+			  \usebeamerfont{title in head/foot}\insertshorttitle
+			\end{beamercolorbox}%
+			
+			% The current date
+			\begin{beamercolorbox}[wd=.113\paperwidth, right]{date in head/foot}%
+			  \usebeamerfont{date in head/foot}\number\day.\number\month.\number\year
+			\end{beamercolorbox}%
+			\vspace{\dimFootlineYOffset}
+		}
+	}
+}
+
+% Position the frame title so that it would get into the headline
+\setbeamertemplate{frametitle}
+{
+	\ifthenelse{\equal{\inPlaceTitle}{header}}
+	{
+		\vspace{\dimPlaceTitleInHeader}
+	}
+	{
+	}
+	\ifthenelse{\equal{\inShowSection}{true}}
+	{
+		\ifthenelse{\equal{\thesection}{0}}
+		{\vspace{\dimFrameTitleOffset}}
+		{\usebeamerfont{section title}\color{black!20}\insertsection\par}
+	}
+	{
+	}
+	\vspace{-1pt}\usebeamerfont{frametitle}\color{black}\insertframetitle
+	\vspace{\dimAfterFrameTitleOffset}
+}
+%\setbeamercolor{frametitle}{fg=black}
+
+\mode
+<all>
