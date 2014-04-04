@@ -1,34 +1,31 @@
-% Copyright 2007 by Till Tantau
-% Copyright 2010 by Remus Mihail Prunescu
+% Copyright Remus Mihail Prunescu
 
-% LaTeX Support Group 2010
+% LaTeX Support Group
 % DTU Official Presentation
 
-\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/theme/beamerthemeDTU.sty,v 0.1 2010/02/24 20:48:30 remus Exp $
-
 \mode<presentation>
+
+\RequirePackage{etoolbox}
 
 % Extra package
 \InputIfFileExists{departments}%
 	{\ClassInfo{}{The file departments.tex with department logo file naming has been loaded.}}%
-	{\ClassInfo{}{The file departments.tex is missing. Consult the manual.}}%
+	{\ClassInfo{}{The file departments.tex is missing. Consult the manual.}%
+}%
 
 % Default values for options
 \newcommand{\inDepartmentShortName}{elektro}
-\newcommand{\inLanguage}{danish}
-\newcommand{\inBackground}{empty}
-\newcommand{\inFontType}{helvetica}
-\newcommand{\inVCenter}{false}
-\newcommand{\inPlaceTitle}{belowheader}
-\newcommand{\inShowSection}{false}
+\newcommand{\inLanguage}{english}
+\newcommand{\inShowSection}{true}
+
+% Check language
+\@ifpackagewith{babel}{danish}{%
+	\renewcommand{\inLanguage}{danish}%
+}{}
+
 
 % Save options
 \DeclareOptionBeamer{department}{\renewcommand{\inDepartmentShortName}{#1}}
-\DeclareOptionBeamer{language}{\renewcommand{\inLanguage}{#1}}
-\DeclareOptionBeamer{background}{\renewcommand{\inBackground}{#1}}
-\DeclareOptionBeamer{font}{\renewcommand{\inFontType}{#1}}
-\DeclareOptionBeamer{vcenter}{\renewcommand{\inVCenter}{#1}}
-\DeclareOptionBeamer{placetitle}{\renewcommand{\inPlaceTitle}{#1}}
 \DeclareOptionBeamer{showsection}{\renewcommand{\inShowSection}{#1}}
 \ProcessOptionsBeamer
 
@@ -52,7 +49,7 @@
 
 \newcommand{\dimTitleOffset}{0.148\paperheight}
 \newcommand{\dimSubtitleOffset}{0.0175\paperheight}
-\newcommand{\dimFrameTitleOffset}{0.027\paperheight}
+\newcommand{\dimFrameTitleOffset}{0.033\paperheight}
 \newcommand{\dimAfterFrameTitleOffset}{-0.008\paperheight}
 \newcommand{\dimAuthorOffset}{0.06\paperheight}
 \newcommand{\dimInstituteOffset}{0.027\paperheight}
@@ -63,8 +60,7 @@
 \newcommand{\dimLeftMarginI}{0.02\paperwidth}
 \newcommand{\dimTextLeftMargin}{0.0669\paperwidth} % Percent
 
-\newcommand{\dimPlaceTitleInHeader}{-0.096\paperheight}
-\ifthenelse{\equal{\inShowSection}{true}}{\renewcommand{\dimPlaceTitleInHeader}{-0.093\paperheight}}{}
+\newcommand{\dimPlaceTitleInHeader}{-0.09\paperheight}
 
 
 
@@ -86,13 +82,13 @@
 
 % Process language
 % Is it DK or UK?
-\ifthenelse{\equal{\inLanguage}{danish}}
+\ifdefstring{\inLanguage}{danish}
 {
 	\renewcommand{\institutetitle}{Danmarks Tekniske Universitet}
 	\renewcommand{\insertDTUWhiteTitleLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_dk_a1_neg}}
 }
 {
-	\ifthenelse{\equal{\inLanguage}{english}}
+	\ifdefstring{\inLanguage}{english}
 	{
 		\renewcommand{\institutetitle}{Technical University of Denmark}
 		\renewcommand{\insertDTUWhiteTitleLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_uk_a1_neg}}
@@ -103,13 +99,25 @@
 	}
 }
 
-% Set the right department title and logos
-\activateDepartmentInfo{\inLanguage}{\inDepartmentShortName}
+\ifcsdef{department@\inDepartmentShortName}
+{
+	\activateDepartmentInfo{\inLanguage}{\inDepartmentShortName}
+}
+{
+	\PackageError{DTU Beamer Template}{Department is undefined. Reverting to default (elektro).}{Check the user guide for defined departments. If you cannot find it then contact support group to add the department.}
+	\activateDepartmentInfo{\inLanguage}{elektro}
+}
 
 % Command for generating the department title
 \newcommand{\departmenttitle}{\thedepartmentNameText}
 % Command for inserting the department logo
-\newcommand{\insertdepartmentlogoA}{\includegraphics[height=\dimDTUDepLogoHeight]{\thedepartmentLogo}}
+\newcommand{\insertdepartmentlogoA}{%
+	\ifdefempty{\@departmentLogo}{
+	}
+	{
+		\includegraphics[height=\dimDTUDepLogoHeight]{\thedepartmentLogo}
+	}
+}
 % Command for inserting frise
 \newcommand{\insertDTUFrise}{\includegraphics[height=\dimDTUFriseHeight]{\thedepartmentFrise}}
 
@@ -130,49 +138,11 @@
 	\insertFrameDTULogo
 }
 
-% If a background picture is used, change logo on title page
-\ifthenelse{\equal{\inBackground}{empty}}
-{
-}
-{
-	\renewcommand{\insertTitleDTULogo}
-	{
-		\vspace{\dimDTULogoYOffset}
-		\hbox{
-			% The DTU Logo
-			\begin{beamercolorbox}[wd=\paperwidth,left]{logo in head/foot}
-				\hspace{\dimDTUWhiteLogoXOffset}\insertDTUWhiteTitleLogo
-			\end{beamercolorbox}
-		}
-	}
-}
-
-% Set background picture
-\setbeamertemplate{background}
-{\ifthenelse{\equal{\bInTitle}{true}}
-	{\ifthenelse{\equal{\inBackground}{empty}}
-		{
-		}
-		{\includegraphics[width=\paperwidth, height=\paperheight]{Background\inBackground}}
-	}
-	{
-	}
-}
-
 % Change themes
 \usefonttheme{DTU}
 \useoutertheme{DTU}
 \useinnertheme{DTU}
 \usecolortheme{DTU}
-
-% Top align content
-\ifthenelse{\equal{\inVCenter}{false}}
-{
-	\beamer@centeredfalse
-}
-{
-	% Do nothing
-}
 
 % Left margin for list environment
 \setlength{\leftmargini}{\dimLeftMarginI}
@@ -191,7 +161,6 @@
 \setbeamercolor{item projected}{fg=white,bg=dtured}
 
 % Customize blocks
-\setbeamertemplate{section in toc}[sections numbered]
 \setbeamertemplate{blocks}[rounded][shadow=true]
 \setbeamercolor{block title}{fg=white,bg=dtured}
 \setbeamerfont{block title}{series=\bfseries\small}

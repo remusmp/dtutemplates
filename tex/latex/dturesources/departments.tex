@@ -11,7 +11,7 @@
 % 
 %\makeDepartmentInfo{<danish|english>}{<departmentname>}{<text graphic file name>}{<Big department logo file name>}{<department text name>}{<department long text name>}
 %
-\RequirePackage{ifthen}
+\RequirePackage{etoolbox}
 
 \newcommand\setDepartmentNameLogo[1]{\def\@departmentNameLogo{#1}}%
 \newcommand\thedepartmentNameLogo{\@departmentNameLogo}%
@@ -30,20 +30,12 @@
 \newcommand\aliasDepartment[2]{%
 \expandafter\def\csname department@#2\endcsname{#1}}%
 %
-\ifthenelse{\isundefined{\makeDepartmentInfo}}{%
+\ifundef{\makeDepartmentInfo}{%
 	\newcommand\makeDepartmentInfo[7]{%
 		\def\@departmentcmd{\csname department@#2\endcsname}
 		\createDepartment{#2}
-		\ifthenelse{\equal{#3}{\@empty}}{%
-			\expandafter\def\csname namelogo#1@\@departmentcmd\endcsname{\csname namelogo#1@\department@admin\endcsname}%
-		}{%
-			\expandafter\def\csname namelogo#1@\@departmentcmd\endcsname{\setDepartmentNameLogo{#3}}%
-		}%
-		\ifthenelse{\equal{#4}{\@empty}}{%
-			\expandafter\def\csname deplogo#1@\@departmentcmd\endcsname{\csname deplogo#1@\department@admin\endcsname}%
-		}{%
-			\expandafter\def\csname deplogo#1@\@departmentcmd\endcsname{\setDepartmentLogo{#4}}%
-		}%
+		\expandafter\def\csname namelogo#1@\@departmentcmd\endcsname{\setDepartmentNameLogo{#3}}%
+		\expandafter\def\csname deplogo#1@\@departmentcmd\endcsname{\setDepartmentLogo{#4}}%
 		\expandafter\def\csname depfrise#1@\@departmentcmd\endcsname{\setDepartmentFrise{#5}}%
 		\expandafter\def\csname nametext#1@\@departmentcmd\endcsname{\setDepartmentNameText{#6}}%
 		\expandafter\def\csname namelongtext#1@\@departmentcmd\endcsname{\setDepartmentLongNameText{#7}}%
