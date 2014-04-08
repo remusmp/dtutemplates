@@ -11,43 +11,67 @@
 \author{Remus M. Prunescu}
 \institute{Department of Electrical Engineering, Technical University of Denmark (DTU)}
 
+\newcommand{\tabitem}{{\color{dtured}$\bullet$} }
+
 \begin{document}
 \frame{
 	\maketitle
 }
 
-\section{User Guide}
 \frame{
-	\frametitle{Installation}
-	The zip file contents complies with the TDS structure.
-	
-	For Unix and Mac systems:
-	\begin{enumerate}
-		\item Unzip the bundle to \texttt{\textasciitilde/texmf/}.
-	\end{enumerate}
-	
-	For Windows systems:
-	\begin{enumerate}
-		\item Unzip the bundle to any location.
-		\item Open Miktex settings.
-		\item Add location to root folders.
-		\item Refresh FNDB.
-	\end{enumerate}
+	\frametitle{Outline}
+	\tableofcontents
 }
 
+\section{User Guide}
+\subsection{Installation}
+\frame{
+	\frametitle{Installation}
+	
+	\begin{block}{Unix and Mac}
+		\begin{itemize}
+			\item Unzip the bundle to \texttt{\textasciitilde/texmf/}.
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{Windows}
+		\begin{itemize}
+			\item Unzip the bundle to any location.
+			\item Open MiKTeX settings.
+			\item Add location to root folders.
+			\item Refresh FNDB.
+		\end{itemize}
+	\end{block}
+}
+
+\subsection{Package Options}
 \frame{
 	\frametitle{Package Options}
 	\begin{block}{[department=]}
 		\begin{tabular}{ll}
-			$\bullet$ aqua & DTU Aqua\\ 
-			$\bullet$ byg & DTU Civil Engineering\\
-			$\bullet$ compute & DTU Compute\\
-			$\bullet$ elektro & DTU Electrical Engineering\\
-			$\bullet$ energikonvertering & DTU Energy Conversion\\
-			$\bullet$ fotonik & DTU Fotonik\\
-			$\bullet$ fysik & DTU Physics\\
+			\tabitem aqua & DTU Aqua\\ 
+			\tabitem byg & DTU Civil Engineering\\
+			\tabitem compute & DTU Compute\\
+			\tabitem elektro & DTU Electrical Engineering\\
+			\tabitem energikonvertering & DTU Energy Conversion\\
+			\tabitem fotonik & DTU Fotonik\\
+			\tabitem fysik & DTU Physics\\
 		\end{tabular}
 	\end{block}
 }
 
+\section{Demonstration}
+\subsection{Blocks}
+\frame{
+	\frametitle{Blocks}
+}
+
+\section{Conclusions}
+\frame{
+	\frametitle{Contact}
+	
+	\begin{center}
+		File bugs and feature requests at \url{https://bitbucket.org/remusmp/dtubeamer/issues}
+	\end{center}
+}
 \end{document}

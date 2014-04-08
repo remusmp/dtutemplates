@@ -165,11 +165,15 @@
 
 % Table of contents
 \setbeamertemplate{section in toc}{%
-    {\color{dtured}$\bullet$}  \inserttocsection \par}
+	{\color{dtured}$\bullet$}  \inserttocsection \par}
 
 \setbeamertemplate{subsection in toc}{
-    \hskip1em{\color{dtured}$\bullet$} \inserttocsubsection \par}
-    
+	\hskip1em{\color{dtured}$\bullet$} \inserttocsubsection \par}
+
+\RequirePackage{setspace}
+\pretocmd{\tableofcontents}{\begin{minipage}{\textwidth}\setstretch{1.4}}{}{}
+\apptocmd{\tableofcontents}{\end{minipage}}{}{}
+
 % Customize blocks
 \setbeamertemplate{blocks}[rounded][shadow=true]
 \setbeamercolor{block title}{fg=white,bg=dtured}
