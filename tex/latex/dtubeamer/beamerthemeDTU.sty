@@ -7,6 +7,9 @@
 
 \RequirePackage{etoolbox}
 
+% Enlarge slide size
+\geometry{paperwidth=140mm,paperheight=105mm}
+
 % Extra package
 \InputIfFileExists{departments}%
 	{\ClassInfo{}{The file departments.tex with department logo file naming has been loaded.}}%
@@ -155,11 +158,18 @@
 \setbeamercolor{itemize item}{fg=dtured}
 
 \setbeamerfont{section in toc}{size=\small}
-\setbeamerfont{subsection in toc}{size=\small}
+\setbeamerfont{subsection in toc}{size=\scriptsize}
 
 \setbeamertemplate{enumerate items}[circle]
 \setbeamercolor{item projected}{fg=white,bg=dtured}
 
+% Table of contents
+\setbeamertemplate{section in toc}{%
+    {\color{dtured}$\bullet$}  \inserttocsection \par}
+
+\setbeamertemplate{subsection in toc}{
+    \hskip1em{\color{dtured}$\bullet$} \inserttocsubsection \par}
+    
 % Customize blocks
 \setbeamertemplate{blocks}[rounded][shadow=true]
 \setbeamercolor{block title}{fg=white,bg=dtured}

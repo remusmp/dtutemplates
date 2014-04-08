@@ -3,9 +3,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
-\usepackage[english]{babel}
+\usepackage[danish]{babel}
 
-\usetheme[department=elektro]{DTU}
+\usetheme[department=vindenergi]{DTU}
 
 \title{DTU Beamer Template}
 \author{Remus M. Prunescu}
@@ -16,13 +16,38 @@
 	\maketitle
 }
 
-\frame{
-	\frametitle{Outline}
-	\tableofcontents
-}
-
-\section{Introduction}
+\section{User Guide}
 \frame{
 	\frametitle{Installation}
+	The zip file contents complies with the TDS structure.
+	
+	For Unix and Mac systems:
+	\begin{enumerate}
+		\item Unzip the bundle to \texttt{\textasciitilde/texmf/}.
+	\end{enumerate}
+	
+	For Windows systems:
+	\begin{enumerate}
+		\item Unzip the bundle to any location.
+		\item Open Miktex settings.
+		\item Add location to root folders.
+		\item Refresh FNDB.
+	\end{enumerate}
 }
+
+\frame{
+	\frametitle{Package Options}
+	\begin{block}{[department=]}
+		\begin{tabular}{ll}
+			$\bullet$ aqua & DTU Aqua\\ 
+			$\bullet$ byg & DTU Civil Engineering\\
+			$\bullet$ compute & DTU Compute\\
+			$\bullet$ elektro & DTU Electrical Engineering\\
+			$\bullet$ energikonvertering & DTU Energy Conversion\\
+			$\bullet$ fotonik & DTU Fotonik\\
+			$\bullet$ fysik & DTU Physics\\
+		\end{tabular}
+	\end{block}
+}
+
 \end{document}
