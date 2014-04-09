@@ -170,9 +170,18 @@
 \setbeamertemplate{subsection in toc}{
 	\hskip1em{\color{dtured}$\bullet$} \inserttocsubsection \par}
 
-\RequirePackage{setspace}
-\pretocmd{\tableofcontents}{\begin{minipage}{\textwidth}\setstretch{1.4}}{}{}
-\apptocmd{\tableofcontents}{\end{minipage}}{}{}
+% Fix space between sections and subsections in toc
+\makeatletter
+\patchcmd{\beamer@sectionintoc}
+  {\vfill}
+  {\vskip\itemsep}
+  {}
+  {}
+\pretocmd{\beamer@subsectionintoc}
+  {\vskip\itemsep}
+  {}
+  {}
+\makeatother 
 
 % Customize blocks
 \setbeamertemplate{blocks}[rounded][shadow=true]
