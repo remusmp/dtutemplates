@@ -59,53 +59,52 @@ department = elektro}
 
 The following table describes the options available. Please note that if you need to write a comma in the text for an option you need to enclose the text in curly braces, ie. \verb.author = {tps, als}..
 
-\begin{longtable}{@{}>{\ttfamily}lp{75mm}>{\ttfamily}l>{}p{30mm}@{}}
+\begin{longtable}{>{\ttfamily}l >{\raggedright}p{0.4\textwidth} >{\ttfamily}p{0.2\textwidth}}
 \hline
-{\normalfont Option} & Description & %{\normalfont Possible Values} 
-& {\normalfont Default Value}\\ \hline
-lang 		& Sets the language for the letter (department name, footer field names, etc.). (danish, english) & & danish\\
-department 	& Specify the department. This selects the correct department logo and text. Possible values are: \verb|aqua|, \verb|byg|, \verb|compute|, \verb|elektro|, \verb|energikonvertering|, \verb|fotonik|, \verb|fysik|, \verb|food|, \verb|kemi|, \verb|kemiteknik|, \verb|management|, \verb|mekanik|, \verb|miljo|, \verb|nanotek|, \verb|space|, \verb|systembiologi|, \verb|transport|, \verb|veterinaerinstituttet|, \verb|vindenergi| & & admin\\
-stationery	& If you are printing on stationery paper you should specify this option (true, false) &  & false\\
-config 		& Specify a configuration file, ie. specifying \emph{user} will load the file \verb,dtu_letter_user.cfg, if available in the \LaTeX\ search directories or the folder containing the letter. The configuration file could contain the \verb,\dtuletterconfig, command with your default values & & \optempty\\
-TO-name 	& The receiver name. & & \optempty\\
-TO-address	& The receiver address & & \optempty\\
-TO-zipcity	& The receiver zip and city (divided by a space) & & \optempty\\
-TO-country	& The receiver country & & \optempty\\
-TO-att		& The attention text & & \optempty\\
-date 		& The date text. & & \verb,\today,\\
-docID  		& Document ID & & \optempty\\
-author 		& Document author & &\optempty\\
+{\normalfont Option} & Description & {\normalfont Default Value}\\ \hline
+lang 		& Sets the language for the letter (department name, footer field names, etc.). (danish, english) & danish\\
+department 	& Specify the department. This selects the correct department logo and text. Possible values are: \verb|aqua|, \verb|byg|, \verb|compute|, \verb|elektro|, \verb|energikonvertering|, \verb|fotonik|, \verb|fysik|, \verb|food|, \verb|kemi|, \verb|kemiteknik|, \verb|management|, \verb|mekanik|, \verb|miljo|, \verb|nanotek|, \verb|space|, \verb|systembiologi|, \verb|transport|, \verb|veterinaerinstituttet|, \verb|vindenergi|. & admin\\
+stationery	& If you are printing on stationery paper you should specify this option (true, false) & false\\
+config 		& Specify a configuration file, ie. specifying \emph{user} will load the file \verb,dtu_letter_user.cfg, if available in the \LaTeX\ search directories or the folder containing the letter. The configuration file could contain the \verb,\dtuletterconfig, command with your default values. & \optempty\\
+TO-name 	& The receiver name. & \optempty\\
+TO-address	& The receiver address & \optempty\\
+TO-zipcity	& The receiver zip and city (divided by a space) & \optempty\\
+TO-country	& The receiver country & \optempty\\
+TO-att		& The attention text & \optempty\\
+date 		& The date text. & \verb,\today,\\
+docID  		& Document ID & \optempty\\
+author 		& Document author &\optempty\\
+%%
+DK-department 	& Danish department name used in the footer (you should not need to set this) & Set by department  \\
+UK-department 	& English department name used in the footer (you should not need to set this) & Set by department  \\
+DK-building 	& Building number for the Danish from address &\optempty\\
+UK-building 	& Building number for the English from address &\optempty\\
+DK-street 		& Street name for the Danish from address &\optempty\\
+UK-street 		& Street name for the English from address &\optempty\\
+DK-zipcity 		& Zip and city for the Danish from address &\optempty\\
+UK-zipcity 		& Zip and city for the English from address &\optempty\\\\
+phone			& Phone number & \optempty\\
+fax				& FAX number. & \optempty\\
+email 			& Email address & \optempty\\
+webpage			& Webpage for the footer (ie. www.dtu.dk) & \optempty\\
+cvr 			& The DTU VAT number & DK 30 06 09 46\\
+phone-direct	& Direct phone number & \optempty\\
 %
-DK-department 	& Danish department name used in the footer (you should not need to set this) & & Set by department  \\
-UK-department 	& English department name used in the footer (you should not need to set this) & & Set by department  \\
-DK-building 	& Building number for the Danish from address & &\optempty\\
-UK-building 	& Building number for the English from address & &\optempty\\
-DK-street 		& Street name for the Danish from address & &\optempty\\
-UK-street 		& Street name for the English from address & &\optempty\\
-DK-zipcity 		& Zip and city for the Danish from address & &\optempty\\
-UK-zipcity 		& Zip and city for the English from address & &\optempty\\\\
-phone			& Phone number & & \optempty\\
-fax				& FAX number. & & \optempty\\
-email 			& Email address & & \optempty\\
-webpage			& Webpage for the footer (ie. www.dtu.dk) & & \optempty\\
-cvr 			& The DTU VAT number & & DK 30 06 09 46\\
-phone-direct	& Direct phone number & & \optempty\\
 %
-%
-DK-lang-cvr 			& Word printed before the VAT number (Danish) 			& & CVR-nr.  \\
-DK-lang-phone 			& Word printed before the phone number (Danish) 		& & Tlf      \\
-DK-lang-phone-direct 	& Word printed before the direct phone number (Danish) 	& & Dir      \\
-DK-lang-fax 			& Word printed before the fax number (Danish)			& & Fax      \\
-DK-lang-att 			& Word printed before the attention text (Danish)		& & Att.     \\
-DK-lang-building 		& Word printed before the building text (Danish)		& & Bygning  \\
-UK-lang-dtu				& Offcial DTU name 										& & Danmarks Tekniske Universitet\\
-UK-lang-cvr 			& Word printed before the VAT number (English) 			& & VAT no.  \\
-UK-lang-phone 			& Word printed before the phone number (English) 		& & Tel      \\
-UK-lang-phone-direct 	& Word printed before the direct phone number (English) & & Dir      \\
-UK-lang-fax	 			& Word printed before the fax number (English)			& & Fax      \\
-UK-lang-att 			& Word printed before the attention text (English)		& & Att.     \\
-UK-lang-building  		& Word printed before the building text (English)		& & Building  \\
-UK-lang-dtu				& Offcial DTU name 										& & Technical University of Denmark\\
+DK-lang-cvr 			& Word printed before the VAT number (Danish) 			& CVR-nr.  \\
+DK-lang-phone 			& Word printed before the phone number (Danish) 		& Tlf      \\
+DK-lang-phone-direct 	& Word printed before the direct phone number (Danish) 	& Dir      \\
+DK-lang-fax 			& Word printed before the fax number (Danish)			& Fax      \\
+DK-lang-att 			& Word printed before the attention text (Danish)		& Att.     \\
+DK-lang-building 		& Word printed before the building text (Danish)		& Bygning  \\
+UK-lang-dtu				& Offcial DTU name 										& Danmarks Tekniske Universitet\\
+UK-lang-cvr 			& Word printed before the VAT number (English) 			& VAT no.  \\
+UK-lang-phone 			& Word printed before the phone number (English) 		& Tel      \\
+UK-lang-phone-direct 	& Word printed before the direct phone number (English) & Dir      \\
+UK-lang-fax	 			& Word printed before the fax number (English)			& Fax      \\
+UK-lang-att 			& Word printed before the attention text (English)		& Att.     \\
+UK-lang-building  		& Word printed before the building text (English)		& Building  \\
+UK-lang-dtu				& Offcial DTU name 										& Technical University of Denmark\\
 \hline
 \end{longtable}
 
