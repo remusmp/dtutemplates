@@ -77,12 +77,13 @@
 	\vspace{\dimPlaceTitleInHeader}
 	\ifdefstring{\inShowSection}{true}
 	{
-		\ifnumcomp{\thesection}{=}{0}{
-			\vspace{\dimFrameTitleOffset}
-		}
-		{
-			\usebeamerfont{section title}\color{black!20}\insertsection\par
-		}
+			\usebeamerfont{section title}\color{black!20}%
+			\ifnumcomp{\thesection}{=}{0}{%
+				\ \par%
+			}
+			{%
+				\insertsection\par
+			}
 	}
 	{
 		\vspace{\dimFrameTitleOffset}
