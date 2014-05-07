@@ -15,7 +15,9 @@
 \title{DTU Beamer Template}
 \author{Remus M. Prunescu}
 \institute{\LaTeX\ Support Group, Technical University of Denmark (DTU)}
+\date{\today}
 
+	
 \newcommand{\tabitem}{{\color{dtured}$\bullet$} }
 
 \begin{document}
@@ -88,6 +90,22 @@
 		\end{tabular}
 	\end{block}	
 }
+
+\subsection{Date Format}
+\frame{
+	\frametitle{Date Format}
+	\begin{block}{Default Date Format}
+		\texttt{[Numeric]Day.[Numeric]Month.[Numeric]Year}
+	\end{block}
+	
+	\begin{block}{Customize Date Format}
+		Place the following code snippet in the preamble:
+		\texttt{\textbackslash newdateformat\{myDateFormat\}\{\textbackslash THEDAY-\textbackslash THEMONTH-\textbackslash THEYEAR\}}
+		\texttt{\textbackslash renewcommand\{\textbackslash DTUDateFormat\}\{\textbackslash myDateFormat\}}
+	\end{block}
+}
+
+
 
 \section{Demonstration}
 

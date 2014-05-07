@@ -6,6 +6,7 @@
 \mode<presentation>
 
 \RequirePackage{etoolbox}
+\RequirePackage{datetime}
 
 % Enlarge slide size
 \geometry{paperwidth=140mm,paperheight=105mm}
@@ -188,6 +189,12 @@
 \setbeamercolor{block title}{fg=white,bg=dtured}
 \setbeamerfont{block title}{series=\bfseries\small}
 \setbeamercolor{block body}{fg=black,bg=white}
+
+
+% Date format
+\newcommand{\DTUDateFormat}{\DTUDate}
+\newdateformat{DTUDate}{\THEDAY.\THEMONTH.\THEYEAR}
+
 
 \mode
 <all>
