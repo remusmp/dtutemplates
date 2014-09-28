@@ -1,0 +1,115 @@
+%==========================================
+%    details and poster setup
+%==========================================
+\newcommand\DTUtitle{My Long Poster Title}
+\newcommand\DTUauthor{ThisIs MyName}
+\newcommand\DTUsubject{This is the subject of my work}
+\newcommand\DTUkeywords{You, could, add, komma-separated, key words}
+%======================================================================
+\documentclass[
+%    ,title=\DTUtitle 
+%    ,author=\DTUauthor
+%    ,subject=\DTUsubject
+%    ,keywords=\DTUkeywords
+%%    ,postercolour=black
+    ,3columns
+    ,a0paper
+%%    ,draft          % draw a grid on the background
+%    ,english        % language
+%    ,parskip=half   % half a lineskip after paragraph
+%    ,fleqn          % equations on the left
+]{dtuposter}
+%======================================================================
+%        Continue with packages
+%======================================================================
+\usepackage[T1]{fontenc}        % special characters
+
+%\usepackage[ansinew]{inputenc}  % Windows
+%\usepackage[applemac]{inputenc} % MacOS
+\usepackage[utf8x]{inputenc}    % Unicode, Linux
+%
+%
+\usepackage{tgadventor}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{blindtext}
+%
+%
+\begin{document}
+%%======================================================================
+%%       Draw background
+%%======================================================================
+%%\begin{tikzpicture}
+%%  \begin{pgfonlayer}{background}
+%%   \draw[rounded corners,fill=red] (1,1) rectangle (2,2);
+%%   \draw[fill=blue] (0,0) circle (.8cm);
+%%  \end{pgfonlayer}
+%% \end{tikzpicture}
+%%\end{document}
+%%
+%%======================================================================
+%%       Make header for poster (title and authors)
+%%======================================================================
+%%
+%\begin{posterhead}%
+%\unskip
+%% the author from the document class gets positioned first
+%\textsuperscript{1,*}, Second Author\textsuperscript{2}
+%
+%{\usekomafont{dictum} \textsuperscript{1} Technical University of Denmark, Department of Mechanical Engineering, Nils Koppels Allé, Building 403, 2800 Kgs. Lyngby, Denmark \par
+%\textsuperscript{*} Corresponding author, Tel.: +45 4525 4183, Fax: +45 4588 4325, Email: jowr@mek.dtu.dk \par \vspace*{.5\baselineskip}
+%\textsuperscript{2} RWTH Aachen University, E.ON Energy Research Center -- EBC, Mathieustrasse 6, 52074 Aachen, Germany \par
+%\textsuperscript{3} RWTH Aachen University, E.ON Energy Research Center -- EBC, Mathieustrasse 6, 52074 Aachen, Germany \par ~ }
+%\end{posterhead}
+%%
+%%======================================================================
+%%      Start with text
+%%======================================================================
+%%
+%\begin{postercontent}
+%\section{Motivation \& Methods}
+%Following the above, temperature alone is not suitable to monitor and control a PCS system. As proposed by one, the state of aggregation is directly linked to the latent charge state via the heat of fusion. The authors investigate three methods to determine the solid content of a PCS containing \SI{21}{\percent} paraffin. 
+%
+%\begin{figure}%
+%      \begin{center}%
+%        %\includegraphics[width=.9\linewidth]{img/drawing-cylinder}%
+%        \caption{Cylinder drawing.}%
+%        \label{fig:cylinder}%
+%    \end{center}%
+%\end{figure}%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Acknowledgement \& References} 
+%The authors thank the German Federal Ministry of Economics and Technology for funding.
+%
+%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Blind Document} 
+%
+\blindmathpaper
+%
+%
+%
+%\end{postercontent}
+
+%\the\dtuposterwidth\ and \the\textwidth\ 
+
+%\the\camwidth
+
+\dtuposterwidth\ and \the\textwidth\ 
+
+\the\dtupostersizeratio\ and \the\dtuposterbasefontsize\ 
+
+\the\dtupostermmpt\ and \the\dtuposterrefsize\ 
+
+
+%\blindtext
+
+
+
+\end{document}
