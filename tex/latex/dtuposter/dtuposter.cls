@@ -8,12 +8,19 @@
 \DeclareStringOption[This Ismyname]{author}           % default author
 \DeclareStringOption[Subject of the Poster]{subject}  % default subject
 \DeclareStringOption[poster, DTU, LaTex]{keywords}    % default keywords
-\DeclareStringOption[black]{bgcolor}                  % default colour
+\DeclareStringOption[gray]{bgcolor}                   % default colour
 %
+%
+\InputIfFileExists{dtucolours}{
+    \ClassInfo{dtuposter}{Successfully loaded the DTU colours.}
+  }{
+    \ClassWarning{dtuposter}{Could not load the colours from dtucolours.sty. This compilation is likely to fail.}
+  }%
 %
 %======================================================================
 %===  Default paper and font sizes
-\RequirePackage{calc,fp}
+\RequirePackage{calc,fp,tikz}
+\usetikzlibrary{shapes,calc,positioning,backgrounds,shadings}
 %
 %% Convert mm to pt
 \FPset{\dtuposter@mmpt}{2.66}
@@ -29,32 +36,32 @@
 }
 \DeclareOption{a1paper}{
   %%A1 paper 594 x 841 mm
-  \FPmul\dtuposterwidth{594mm}
-  \FPmul\dtuposterheight{841mm}
+  \FPmul\dtuposterwidth{594}{\dtuposter@mmpt}
+  \FPmul\dtuposterheight{841}{\dtuposter@mmpt}
   \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
   \PassOptionsToClass{\CurrentOption}{scrartcl}
   \PassOptionsToPackage{\CurrentOption}{geometry}
 }
 \DeclareOption{a2paper}{
   %%A4 paper 420 x 595 mm
-  \FPmul\dtuposterwidth{420mm}
-  \FPmul\dtuposterheight{595mm}
+  \FPmul\dtuposterwidth{420}{\dtuposter@mmpt}
+  \FPmul\dtuposterheight{595}{\dtuposter@mmpt}
   \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
   \PassOptionsToClass{\CurrentOption}{scrartcl}
   \PassOptionsToPackage{\CurrentOption}{geometry}
 }
 \DeclareOption{a3paper}{
   %%A4 paper 297 x 421 mm
-  \FPmul\dtuposterwidth{297mm}
-  \FPmul\dtuposterheight{421mm}
+  \FPmul\dtuposterwidth{297}{\dtuposter@mmpt}
+  \FPmul\dtuposterheight{421}{\dtuposter@mmpt}
   \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
   \PassOptionsToClass{\CurrentOption}{scrartcl}
   \PassOptionsToPackage{\CurrentOption}{geometry}
 }
 \DeclareOption{a4paper}{
   %%A4 paper 210 x 297 mm
-  \FPmul\dtuposterwidth{210mm}
-  \FPmul\dtuposterheight{297mm}
+  \FPmul\dtuposterwidth{210}{\dtuposter@mmpt}
+  \FPmul\dtuposterheight{297}{\dtuposter@mmpt}
   \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
   \PassOptionsToClass{\CurrentOption}{scrartcl}
   \PassOptionsToPackage{\CurrentOption}{geometry}
@@ -79,8 +86,9 @@
   \setlength{\bgfirstline}{\dtuposter@tmp pt * 120}
   \newlength{\bgsecondline}%
   \setlength{\bgsecondline}{\dtuposter@tmp pt * 1080}
+  \FPmul\dtuposter@tmptwo{1}{\dtuposter@sizeratio}
   \newlength{\bglinewidth}%
-  \setlength{\bglinewidth}{\dtuposter@tmp pt * 5}
+  \setlength{\bglinewidth}{\dtuposter@tmptwo pt * 5}
   %
   \newlength{\textmarginleftright}%
   \setlength{\textmarginleftright}{\dtuposter@tmp pt * 40}
@@ -90,32 +98,40 @@
   \setlength{\textmarginbottom}{\dtuposter@tmp pt * 130}
   %
   \newlength{\textintercolumn}%
-  \setlength{\textintercolumn}{\dtuposter@tmp pt * 20}
+  \setlength{\textintercolumn}{\dtuposter@tmp pt * 20} % The design guide says 10, but that is really small
   %
   \newlength{\footerimage}%
-  \setlength{\footerimage}{\paperwidth}
+  \setlength{\footerimage}{\dtuposterwidth pt}
   \addtolength{\footerimage}{-2\textmarginleftright} % left and right
   \addtolength{\footerimage}{-3\textmarginleftright} % in between the 4 images
   \addtolength{\footerimage}{-0.75\footerimage} % 4 images => 1/4 of length
   %
   \PassOptionsToPackage{%
     centering,%
+    pdftex,%
     left=\textmarginleftright,%
     right=\textmarginleftright,%
     top=\textmargintop,%
     bottom=\textmarginbottom,%
     nohead}{geometry}
-    
-  \newlength{\camwidth}%
-  \setlength{\camwidth}{\dtuposterwidth pt + 30mm}
-  \newlength{\camheight}%
-  \setlength{\camheight}{\dtuposterheight pt + 30mm}
-  \PassOptionsToPackage{cam,axes,info,width=\the\camwidth,height=\the\camheight,pdflatex,center}{crop}
+
+  \FPdiv\dtuposter@camwidth{\dtuposterwidth}{\dtuposter@mmpt}
+  \FPadd\dtuposter@camwidth{\dtuposter@camwidth}{30}
+  \FPdiv\dtuposter@camheight{\dtuposterheight}{\dtuposter@mmpt}
+  \FPadd\dtuposter@camheight{\dtuposter@camheight}{40}
+  \PassOptionsToPackage{cam,axes,info,width=\dtuposter@camwidth truemm,height=\dtuposter@camheight truemm,pdflatex,center}{crop}
+  
+  %\FPmul\dtuposter@cropleftright{\dtuposter@camwidth}{\dtuposter@mmpt}
+  %\FPsub\dtuposter@cropleftright{\dtuposter@cropleftright}{\dtuposterwidth}
+  %\FPdiv\dtuposter@cropleftright{\dtuposter@cropleftright}{-1}
+  %\FPset\dtuposter@cropleftright{0}
+  %\newlength{\cropleftright}%
+  %\setlength{\cropleftright}{\dtuposter@camwidth truemm} % (880 - 841) / 2
   
   \FPmul\dtuposter@tmp{\dtuposter@mmpt}{\dtuposter@sizeratio}
   \FPmul\dtuposter@tmp{\dtuposter@tmp}{0.1}
   \newlength{\cropleftright}%
-  \setlength{\cropleftright}{\dtuposter@tmp pt * 195} % (880 - 841) / 2
+  \setlength{\cropleftright}{-7.5mm} % (880 - 841) / 2
   \newlength{\croptopbottom}%
   \setlength{\croptopbottom}{\dtuposter@tmp pt * 205} % (1230 - 1189) / 2
 }
@@ -131,42 +147,76 @@
   \FPset\dtuposter@columncount{2}
   \FPdiv\dtuposter@fontsizefactor{48}{35}
 }
+\DeclareOption{1columns}{
+  \FPset\dtuposter@columncount{1}
+  \FPdiv\dtuposter@fontsizefactor{48}{35}
+}
+\DeclareOption{1column}{
+  \ExecuteOptions{1columns}
+}
+\DeclareOption{0columns}{
+  \ExecuteOptions{1columns}
+}
+\DeclareOption{0column}{
+  \ExecuteOptions{1columns}
+}
 % default
 \ExecuteOptions{3columns}
+%
 %
 %======================================================================
 %===  Define fonts according to "DTU_Poster_A0_HOEJ_2sp.Skabelon.cs2"
 %
 \newlength\dtuposter@tmpfontsize
-\newcommand{\dtuposter@fs}[1]{%
-  \setlength{\dtuposter@tmpfontsize}{#1}%
-  \fontsize{#1}{1.2\dtuposter@tmpfontsize}%
-  \selectfont
+\newlength\dtuposter@tmplinespace
+\newcommand{\dtuposter@fs}[3]{ %
+  \FPmul\dtuposter@tmp{\dtuposter@sizeratio}{#1} %
+  \FPmul\dtuposter@tmp{\dtuposter@tmp}{#3} %
+  \setlength{\dtuposter@tmpfontsize}{\dtuposter@tmp pt} %
+  \FPmul\dtuposter@tmp{\dtuposter@sizeratio}{#2} %
+  \FPmul\dtuposter@tmp{\dtuposter@tmp}{#3} %
+  \setlength{\dtuposter@tmplinespace}{\dtuposter@tmp pt} %
+  \fontsize{\dtuposter@tmpfontsize}{\dtuposter@tmplinespace}\selectfont %
 }
 %
 \newcommand\dtuposter@setfonts{
-  \FPmul\dtuposter@titlefontsize{\dtuposter@sizeratio}{160}
-  \FPmul\dtuposter@minisecfontsize{\dtuposter@sizeratio}{60}
-  \FPmul\dtuposter@tmp{\dtuposter@sizeratio}{35}
-  \FPmul\dtuposter@dictumfontsize{\dtuposter@tmp}{\dtuposter@fontsizefactor}
-  \FPmul\dtuposter@sectionfontsize{\dtuposter@tmp}{\dtuposter@fontsizefactor}
-  \FPmul\dtuposter@subsectionfontsize{\dtuposter@tmp}{\dtuposter@fontsizefactor}
-  \FPmul\dtuposter@captionfontsize{\dtuposter@sizeratio}{15}
-
-  \setkomafont{title}{\normalfont\dtuposter@fs{\dtuposter@titlefontsize pt}}     % used with title
-  \setkomafont{minisec}{\normalfont\dtuposter@fs{\dtuposter@minisecfontsize pt}}     % used for authors
-  \setkomafont{dictum}{\normalfont\dtuposter@fs{\dtuposter@dictumfontsize pt}}      % used for affiliation
-  \setkomafont{section}{\normalfont\dtuposter@fs{\dtuposter@sectionfontsize pt}}    % section
-  \setkomafont{subsection}{\normalfont\dtuposter@fs{\dtuposter@subsectionfontsize pt}} % subsection
-  \setkomafont{caption}{\normalfont\dtuposter@fs{\dtuposter@captionfontsize pt}}     % table and figure caption
-  \setkomafont{captionlabel}{\usekomafont{caption}}                       % label looks the same
+  \setkomafont{title}{       \normalfont\dtuposter@fs{160}{170}{1}\bfseries\color{dtured}} % used with title
+  \setkomafont{minisec}{     \normalfont\dtuposter@fs{ 60}{ 70}{1}\bfseries} % used for authors
+  \setkomafont{dictum}{      \normalfont\dtuposter@fs{ 48}{ 60}{1}} % used for affiliation
+  \setkomafont{section}{     \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries} % section
+  \setkomafont{subsection}{  \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries} % subsection
+  \setkomafont{caption}{     \normalfont\dtuposter@fs{ 15}{ 24}{1}\bfseries} % table and figure caption
+  \setkomafont{captionlabel}{\usekomafont{caption}}              % label looks the same
 }
 %\AtEndOfClass{\dtuposter@setfonts} 
 \AtBeginDocument{\dtuposter@setfonts} 
-
+%
+%
+%======================================================================
+%===  change the background for drafting
+\providecommand\dtuposter@drawgrid{}
+%
+\DeclareOption{draft}{%
+  \renewcommand\dtuposter@drawgrid{%
+%  \begin{tikzpicture} %
+%    \begin{scope}[shift={(current page.north west)}] %
+%      %\draw[xshift=\cropleftright,yshift=\croptopbottom,step=2cm,color=gray] (0,-\paperheight) grid (\paperwidth,0); %
+%      \draw[xshift=-20\textmarginleftright,step=2cm,color=gray] (0,-\paperheight) grid (\paperwidth,0); %
+%    \end{scope} %
+%  \end{tikzpicture}%
+    \tikz[remember picture,overlay] {%
+      %\draw[xshift=\dtuposter@cropleftright pt, step=2cm,color=gray] (current page.north west) grid (current page.south east); %
+      \draw[step=2cm,color=gray] (current page.north west) grid (current page.south east); %
+    } %
+  } %
+  \PassOptionsToClass{\CurrentOption}{scrartcl}%
+  \AtBeginDocument{\dtuposter@drawgrid} 
+}
 
 %% Process given options
 \ProcessOptions\relax
+
+\ProcessKeyvalOptions*
 
 % After parsing the options, all variables are populated
 \FPmul\dtuposter@tmp{\dtuposter@sizeratio}{35}
@@ -183,25 +233,6 @@
 \newlength\dtuposterrefsize
 \setlength\dtuposterrefsize{\dtuposter@refsize pt}
 
-
-%}
-%
-%%======================================================================
-%%===  use empty command for normal processing
-%\newcommand\@drawTheGrid{%
-%    
-%} 
-%
-%%======================================================================
-%%===  change the background for drafting
-%\DeclareOption{draft}{%
-%  \renewcommand\@drawTheGrid{%
-%    \begin{scope}[shift={(current page.north west)}] %
-%      \draw[xshift=\cropleftright,yshift=\croptopbottom,step=2cm,color=gray] (0,-\paperheight) grid (\paperwidth,0); %
-%    \end{scope} %
-%  } %
-%  \PassOptionsToClass{draft}{scrartcl}%
-%}
 %%
 %======================================================================
 %===  Passes unknown options to the underlying scrartcl class
@@ -233,15 +264,59 @@
 %\AtEndOfClass{\colorlet{DTUposter}{\DTU@postercolour}}
 %%
 \LoadClass{scrartcl}
+\pagestyle{empty}
 % Set the papersize
 \dtuposter@setpapersize
 \RequirePackage{geometry}
 \RequirePackage{crop}
+%
+%
+\newenvironment{dtuposterhead}{ %
+  \flushleft {\usekomafont{title} \dtuposter@title  } \par \vspace*{2\baselineskip} %
+}{ %
+  \vspace*{2\baselineskip} \par %
+} %
+%
+%
+\RequirePackage{xparse}
+\NewDocumentCommand\dtuposterauthor{ s m }{%
+  \IfBooleanTF#1%
+    {\vspace*{-1.0\baselineskip}\par\flushleft {\usekomafont{minisec} #2 } \par }
+    {\vspace*{-0.5\baselineskip}\par\flushleft {\usekomafont{minisec} #2 } \par }
+}
+%
+\NewDocumentCommand\dtuposteraffil{ s m }{%
+  \IfBooleanTF#1%
+    {\vspace*{-1.0\baselineskip}\par\flushleft {\usekomafont{dictum} #2 } \par }% If a star is seen
+    {\vspace*{-0.5\baselineskip}\par\flushleft {\usekomafont{dictum} #2 } \par }% If no star is seen
+}
 
+%\newenvironment{dtuposterhead}{ %
+%  \begin{minipage}{.95\linewidth} %
+%    \flushleft \par
+%    {\usekomafont{title} \@title } \par \vspace*{2\baselineskip} %
+%    \usekomafont{minisec} \trim{\@author} 
+%}{ %
+%  \par  \vspace*{.5\baselineskip} %
+%  \end{minipage} %
+%} %
+%%
+%\newenvironment{postercontent}{ %
+%%  \raggedcolumns
+%  \setlength{\columnsep}{\textintercolumn}
+%  \begin{multicols}{\@postercolumns} 
+%}{ 
+%  \end{multicols} 
+%} %
+
+\RequirePackage{etoolbox}
 \RequirePackage{multicol}
 \setlength{\columnsep}{\textintercolumn}
-\AtBeginDocument{\begin{multicols}{\dtuposter@columncount}}
-\AtEndDocument{\end{multicols}}
+\ifnumcomp{\dtuposter@columncount}{>}{1}{%
+\newenvironment{dtupostercontent}{\begin{multicols}{\dtuposter@columncount}}{\end{multicols}}
+}{%
+\newenvironment{dtupostercontent}{}{}%
+}
 
 
 %%
@@ -592,41 +667,41 @@
 %\newlength{\croptopbottom}%
 %\setlength{\croptopbottom}{20.5mm} % (1230 - 1189) / 2
 %%
-%%======================================================================
-%% Use tikz to draw the background 
-%%======================================================================
-%\RequirePackage{tikz}
-%\usetikzlibrary{shapes,calc,positioning,backgrounds,shadings}
-%%
-%\AtBeginDocument{\makebackground}
-%\newcommand{\makebackground}%
-%{ 
-%  \begin{tikzpicture}[remember picture,overlay]
-%  \begin{pgfonlayer}{background}
-%  % set base node as marker
-%  \node [inner sep=0pt,xshift=\cropleftright,yshift=\croptopbottom,below right] at (current page.north west)
-%  { %ttt };
-%    \begin{tikzpicture}[remember picture,overlay]
-%      % just a marker
-%      %\filldraw[inner sep=0pt,color=white] (0mm,0mm) rectangle +(0.1mm,-0.1mm);
-%      %
-%      \draw (\textmarginleftright,-50mm) node[inner sep=0pt, below right] {\includegraphics[height=43.25mm]{tex_dtu_mekanik_b_uk}}; 
-%      \draw (\paperwidth-\textmarginleftright,-30mm) node[inner sep=0pt, below left] {\includegraphics[width=44.5mm]{tex_dtu_logo}}; 
-%      \filldraw[inner sep=0pt,color=DTUposter!10] (\bgmarginleftright,-\bgfirstline-\bglinewidth) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline); 
-%      \filldraw[inner sep=0pt,color=DTUposter]    (\bgmarginleftright,-\bgfirstline) rectangle (\paperwidth-\bgmarginleftright,-\bgfirstline-\bglinewidth); 
-%      \filldraw[inner sep=0pt,color=DTUposter]    (\bgmarginleftright,-\bgsecondline) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline-\bglinewidth); 
-%      %
-%      \draw (\textmarginleftright,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
-%      \draw (2\textmarginleftright+\footerimage,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
-%      \draw (3\textmarginleftright+2\footerimage,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
-%      \draw (4\textmarginleftright+3\footerimage,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
-%      % 
-%    \end{tikzpicture}
-%  };
+%======================================================================
+% Use tikz to draw the background 
+%======================================================================
+\RequirePackage{tikz}
+\usetikzlibrary{shapes,calc,positioning,backgrounds,shadings}
+%
+\AtBeginDocument{\makebackground}
+\newcommand{\makebackground}%dtuposter@bgcolor
+{ 
+  \begin{tikzpicture}[remember picture,overlay]
+  \begin{pgfonlayer}{background}
+  % set base node as marker
+  \node [inner sep=0pt,xshift=\cropleftright,yshift=\croptopbottom,below right] at (current page.north west)
+  { %ttt };
+    \begin{tikzpicture}[remember picture,overlay]
+      % just a marker
+      %\filldraw[inner sep=0pt,color=white] (0mm,0mm) rectangle +(0.1mm,-0.1mm);
+      %
+      \draw (\textmarginleftright,-50mm) node[inner sep=0pt, below right] {\includegraphics[height=43.25mm]{tex_dtu_mekanik_b_uk}}; 
+      \draw (\paperwidth-\textmarginleftright,-30mm) node[inner sep=0pt, below left] {\includegraphics[width=44.5mm]{tex_dtu_logo}}; 
+      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor!10] (\bgmarginleftright,-\bgfirstline-\bglinewidth) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline); 
+      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor]    (\bgmarginleftright,-\bgfirstline) rectangle (\paperwidth-\bgmarginleftright,-\bgfirstline-\bglinewidth); 
+      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor]    (\bgmarginleftright,-\bgsecondline) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline-\bglinewidth); 
+      %
+      \draw (\textmarginleftright,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
+      \draw (2\textmarginleftright+\footerimage,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
+      \draw (3\textmarginleftright+2\footerimage,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
+      \draw (4\textmarginleftright+3\footerimage,-1125mm) node[inner sep=0pt, below right] {\includegraphics[width=\footerimage]{tex_dtu_mekanik_b_uk}};
+      % 
+    \end{tikzpicture}
+  };
 %  \@drawTheGrid 
-%  \end{pgfonlayer}
-%  \end{tikzpicture}
-%}
+  \end{pgfonlayer}
+  \end{tikzpicture}
+}
 %%
 %%======================================================================
 %%       New headlines
