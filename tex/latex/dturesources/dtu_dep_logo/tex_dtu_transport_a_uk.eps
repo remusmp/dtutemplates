@@ -1,26 +1,57 @@
 %!PS-Adobe-3.0 EPSF-3.0
+%Produced by poppler pdftops version: 0.26.4 (http://poppler.freedesktop.org)
 %%Creator: GPL Ghostscript 871 (epswrite)
 %%LanguageLevel: 2
 %%DocumentSuppliedResources: (atend)
 %%BoundingBox: 0 0 131 37
+%%HiResBoundingBox: 0 0 131 37
 %%DocumentSuppliedResources: (atend)
 %%EndComments
 %%BeginProlog
 %%BeginResource: procset xpdf 3.00 0
-%%Copyright: Copyright 1996-2004 Glyph & Cog, LLC
+%%Copyright: Copyright 1996-2011 Glyph & Cog, LLC
 /xpdf 75 dict def xpdf begin
 % PDF special state
 /pdfDictSize 15 def
 /pdfSetup {
-  3 1 roll 2 array astore
   /setpagedevice where {
-    pop 3 dict begin
-      /PageSize exch def
-      /ImagingBBox null def
+    pop 2 dict begin
+      /Policies 1 dict dup begin /PageSize 6 def end def
       { /Duplex true def } if
     currentdict end setpagedevice
   } {
-    pop pop
+    pop
+  } ifelse
+} def
+/pdfSetupPaper {
+  % Change paper size, but only if different from previous paper size otherwise
+  % duplex fails. PLRM specifies a tolerance of 5 pts when matching paper size
+  % so we use the same when checking if the size changes.
+  /setpagedevice where {
+    pop currentpagedevice
+    /PageSize known {
+      2 copy
+      currentpagedevice /PageSize get aload pop
+      exch 4 1 roll
+      sub abs 5 gt
+      3 1 roll
+      sub abs 5 gt
+      or
+    } {
+      true
+    } ifelse
+    {
+      2 array astore
+      2 dict begin
+        /PageSize exch def
+        /ImagingBBox null def
+      currentdict end
+      setpagedevice
+    } {
+      pop pop
+    } ifelse
+  } {
+    pop
   } ifelse
 } def
 /pdfStartPage {
@@ -148,82 +179,82 @@
 /Td { pdfTextMat transform moveto } def
 /Tm { /pdfTextMat exch def } def
 % text string operators
-/cshow where {
+/xyshow where {
   pop
-  /cshow2 {
-    dup {
-      pop pop
-      1 string dup 0 3 index put 3 index exec
-    } exch cshow
-    pop pop
+  /xyshow2 {
+    dup length array
+    0 2 2 index length 1 sub {
+      2 index 1 index 2 copy get 3 1 roll 1 add get
+      pdfTextMat dtransform
+      4 2 roll 2 copy 6 5 roll put 1 add 3 1 roll dup 4 2 roll put
+    } for
+    exch pop
+    xyshow
   } def
 }{
-  /cshow2 {
+  /xyshow2 {
     currentfont /FontType get 0 eq {
-      0 2 2 index length 1 sub {
-        2 copy get exch 1 add 2 index exch get
-        2 copy exch 256 mul add
-        2 string dup 0 6 5 roll put dup 1 5 4 roll put
-        3 index exec
+      0 2 3 index length 1 sub {
+        currentpoint 4 index 3 index 2 getinterval show moveto
+        2 copy get 2 index 3 2 roll 1 add get
+        pdfTextMat dtransform rmoveto
       } for
     } {
-      dup {
-        1 string dup 0 3 index put 3 index exec
-      } forall
+      0 1 3 index length 1 sub {
+        currentpoint 4 index 3 index 1 getinterval show moveto
+        2 copy 2 mul get 2 index 3 2 roll 2 mul 1 add get
+        pdfTextMat dtransform rmoveto
+      } for
     } ifelse
     pop pop
   } def
 } ifelse
-/awcp {
-  exch {
-    false charpath
-    5 index 5 index rmoveto
-    6 index eq { 7 index 7 index rmoveto } if
-  } exch cshow2
-  6 {pop} repeat
-} def
+/cshow where {
+  pop
+  /xycp {
+    0 3 2 roll
+    {
+      pop pop currentpoint 3 2 roll
+      1 string dup 0 4 3 roll put false charpath moveto
+      2 copy get 2 index 2 index 1 add get
+      pdfTextMat dtransform rmoveto
+      2 add
+    } exch cshow
+    pop pop
+  } def
+}{
+  /xycp {
+    currentfont /FontType get 0 eq {
+      0 2 3 index length 1 sub {
+        currentpoint 4 index 3 index 2 getinterval false charpath moveto
+        2 copy get 2 index 3 2 roll 1 add get
+        pdfTextMat dtransform rmoveto
+      } for
+    } {
+      0 1 3 index length 1 sub {
+        currentpoint 4 index 3 index 1 getinterval false charpath moveto
+        2 copy 2 mul get 2 index 3 2 roll 2 mul 1 add get
+        pdfTextMat dtransform rmoveto
+      } for
+    } ifelse
+    pop pop
+  } def
+} ifelse
 /Tj {
   fCol
-  1 index stringwidth pdfTextMat idtransform pop
-  sub 1 index length dup 0 ne { div } { pop pop 0 } ifelse
-  pdfWordSpacing pdfHorizScaling mul 0 pdfTextMat dtransform 32
-  4 3 roll pdfCharSpacing pdfHorizScaling mul add 0
-  pdfTextMat dtransform
-  6 5 roll Tj1
-} def
-/Tj16 {
-  fCol
-  2 index stringwidth pdfTextMat idtransform pop
-  sub exch div
-  pdfWordSpacing pdfHorizScaling mul 0 pdfTextMat dtransform 32
-  4 3 roll pdfCharSpacing pdfHorizScaling mul add 0
-  pdfTextMat dtransform
-  6 5 roll Tj1
-} def
-/Tj16V {
-  fCol
-  2 index stringwidth pdfTextMat idtransform exch pop
-  sub exch div
-  0 pdfWordSpacing pdfTextMat dtransform 32
-  4 3 roll pdfCharSpacing add 0 exch
-  pdfTextMat dtransform
-  6 5 roll Tj1
-} def
-/Tj1 {
   0 pdfTextRise pdfTextMat dtransform rmoveto
-  currentpoint 8 2 roll
-  pdfTextRender 1 and 0 eq pdfPatternCS not and {
-    6 copy awidthshow
+  currentpoint 4 2 roll
+  pdfTextRender 1 and 0 eq {
+    2 copy xyshow2
   } if
   pdfTextRender 3 and dup 1 eq exch 2 eq or {
-    7 index 7 index moveto
-    6 copy
+    3 index 3 index moveto
+    2 copy
     currentfont /FontType get 3 eq { fCol } { sCol } ifelse
-    false awcp currentpoint stroke moveto
+    xycp currentpoint stroke moveto
   } if
-  pdfTextRender 4 and 0 ne pdfPatternCS or {
-    8 6 roll moveto
-    false awcp
+  pdfTextRender 4 and 0 ne {
+    4 2 roll moveto xycp
     /pdfTextClipPath [ pdfTextClipPath aload pop
       {/moveto cvx}
       {/lineto cvx}
@@ -232,32 +263,34 @@
     pathforall ] def
     currentpoint newpath moveto
   } {
-    8 {pop} repeat
+    pop pop pop pop
   } ifelse
   0 pdfTextRise neg pdfTextMat dtransform rmoveto
 } def
-/TJm { pdfFontSize 0.001 mul mul neg 0
+/TJm { 0.001 mul pdfFontSize mul pdfHorizScaling mul neg 0
        pdfTextMat dtransform rmoveto } def
-/TJmV { pdfFontSize 0.001 mul mul neg 0 exch
+/TJmV { 0.001 mul pdfFontSize mul neg 0 exch
         pdfTextMat dtransform rmoveto } def
 /Tclip { pdfTextClipPath cvx exec clip newpath
          /pdfTextClipPath [] def } def
 /Tclip* { pdfTextClipPath cvx exec eoclip newpath
          /pdfTextClipPath [] def } def
-% Level 2 image operators
+% Level 2/3 image operators
 /pdfImBuf 100 string def
-/pdfIm {
-  image
+/pdfImStr {
+  2 copy exch length lt {
+    2 copy get exch 1 add exch
+  } {
+    ()
+  } ifelse
+} def
+/skipEOD {
   { currentfile pdfImBuf readline
     not { pop exit } if
     (%-EOD-) eq { exit } if } loop
 } def
-/pdfImM {
-  fCol imagemask
-  { currentfile pdfImBuf readline
-    not { pop exit } if
-    (%-EOD-) eq { exit } if } loop
-} def
+/pdfIm { image skipEOD } def
+/pdfImM { fCol imagemask skipEOD } def
 /pr { 2 index 2 index 3 2 roll putinterval 4 add } def
 /pdfImClip {
   gsave
@@ -412,6 +445,7 @@ end
 xpdf begin
 %%EndSetup
 pdfStartPage
+%%EndPageSetup
 [] 0 d
 1 i
 0 j
@@ -425,9 +459,12 @@ pdfStartPage
 false op
 false OP
 {} settransfer
+0 0 131 37 re
+W
 q
 q
 [0.1 0 0 0.1 0 0] cm
+{} settransfer
 q
 10 0 1290.94 365.891 re
 W
@@ -443,11 +480,11 @@ f
 11.0195 276.371 10 277.352 10 279.441 c
 10 361.199 l
 10 363.27 11.0195 364.281 12.8281 364.59 c
-16.3711 365.18 26.7813 365.898 35.6016 365.898 c
+16.3711 365.18 26.7812 365.898 35.6016 365.898 c
 47.1797 365.898 56.7383 363.148 63.1211 356.969 c
 70.7109 349.648 72.6992 339.57 72.6992 325.969 c
 72.6992 314.699 l
-72.6992 301.23 70.7813 291.27 63.2891 283.891 c
+72.6992 301.23 70.7812 291.27 63.2891 283.891 c
 63.3008 283.891 l
 h
 58.9297 325.371 m
@@ -837,7 +874,6 @@ h
 916.852 156.961 l
 916.852 148.32 920.93 146.031 927.898 146.031 c
 933.43 146.031 938.371 147.691 944.129 150.82 c
-944.129 170.199 l
 944.129 170.211 l
 h
 952.301 138.219 m
@@ -1170,7 +1206,7 @@ h
 60.7695 212.781 49.6992 219.039 35.2695 219.039 c
 29.6094 219.039 25.8984 218.91 21.9219 218.672 c
 21.9219 146.988 l
-25.7813 146.781 29.6211 146.781 35.2695 146.781 c
+25.7812 146.781 29.6211 146.781 35.2695 146.781 c
 49.6992 146.781 60.7695 153.141 60.7695 174.77 c
 60.7695 191.031 l
 60.7695 191.02 l

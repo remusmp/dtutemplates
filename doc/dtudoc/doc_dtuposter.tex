@@ -14,6 +14,7 @@
 %%    ,postercolour=black
     ,3columns
     ,a0paper
+    ,crop
 %    ,draft          % draw a grid on the background
 %    ,english        % language
 %    ,parskip=half   % half a lineskip after paragraph
@@ -107,6 +108,101 @@
 \end{dtuposterhead}
 
 \begin{dtupostercontent}
+\section{Basic Options}
+
+When loading this poster class, you can pass some options to adapt the file to your needs. 
+There are two groups of options, key-value options and simple options. Key-value options are
+used by writing the option name, the key, followed by the value as in \texttt{title=\{My Poster Title\}}. 
+It is often a good idea to wrap your input with curly brackets. The available key-value options 
+and their default values are:
+\begin{itemize}
+\item \texttt{title=\{This is the Poster Title\}}
+\item \texttt{author=\{This Ismyname\}}
+\item \texttt{subject=\{Subject of the Poster\}}
+\item \texttt{keywords=\{poster, DTU, LaTex\}}
+\item \texttt{bgcolor=\{dtucoolgrey\}}
+\item \texttt{toplogo=\{tex\_dtu\_mekanik\_b\_uk\}}
+\item \texttt{botlogo=\{tex\_dtu\_elektro\_b\_uk\}}
+\end{itemize}
+The other options are activated by passing them to the class without any value.
+
+%
+%\RequirePackage{kvoptions}
+%\DeclareStringOption[This is the Poster Title]{title} % default title
+%\DeclareStringOption[This Ismyname]{author}           % default author
+%\DeclareStringOption[Subject of the Poster]{subject}  % default subject
+%\DeclareStringOption[poster, DTU, LaTex]{keywords}    % default keywords
+%\DeclareStringOption[gray]{bgcolor}  
+%
+%  
+%  toplogo tex_dtu_mekanik_b_uk
+%  botlogo tex_dtu_mekanik_b_uk
+%  
+%  
+%
+%\DeclareOption{a0paper}{
+%  %%A0 paper 841 x 1189 mm
+%  \FPmul\dtuposterwidth{841}{\dtuposter@mmpt}
+%  \FPmul\dtuposterheight{1189}{\dtuposter@mmpt}
+%  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+%  \PassOptionsToClass{\CurrentOption}{scrartcl}
+%  \PassOptionsToPackage{\CurrentOption}{geometry}
+%}
+%\DeclareOption{a1paper}{
+%  %%A1 paper 594 x 841 mm
+%  \FPmul\dtuposterwidth{594}{\dtuposter@mmpt}
+%  \FPmul\dtuposterheight{841}{\dtuposter@mmpt}
+%  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+%  \PassOptionsToClass{\CurrentOption}{scrartcl}
+%  \PassOptionsToPackage{\CurrentOption}{geometry}
+%}
+%\DeclareOption{a2paper}{
+%  %%A4 paper 420 x 595 mm
+%  \FPmul\dtuposterwidth{420}{\dtuposter@mmpt}
+%  \FPmul\dtuposterheight{595}{\dtuposter@mmpt}
+%  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+%  \PassOptionsToClass{\CurrentOption}{scrartcl}
+%  \PassOptionsToPackage{\CurrentOption}{geometry}
+%}
+%\DeclareOption{a3paper}{
+%  %%A4 paper 297 x 421 mm
+%  \FPmul\dtuposterwidth{297}{\dtuposter@mmpt}
+%  \FPmul\dtuposterheight{421}{\dtuposter@mmpt}
+%  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+%  \PassOptionsToClass{\CurrentOption}{scrartcl}
+%  \PassOptionsToPackage{\CurrentOption}{geometry}
+%}
+%\DeclareOption{a4paper}{
+%
+%
+%\DeclareOption{3columns}{
+%  \FPset\dtuposter@columncount{3}
+%  \FPset\dtuposter@fontsizefactor{1}
+%}
+%\DeclareOption{2columns}{
+%  \FPset\dtuposter@columncount{2}
+%  \FPdiv\dtuposter@fontsizefactor{48}{35}
+%}
+%\DeclareOption{1columns}{
+%  \FPset\dtuposter@columncount{1}
+%  \FPdiv\dtuposter@fontsizefactor{48}{35}
+%}
+%\DeclareOption{1column}{
+%  \ExecuteOptions{1columns}
+%}
+%\DeclareOption{0columns}{
+%  \ExecuteOptions{1columns}
+%}
+%\DeclareOption{0column}{
+%  \ExecuteOptions{1columns}
+%  
+%  draft
+% crop, nocrop
+
+\begin{fadebox}
+\blindtext
+\end{fadebox}
+
 %
 \blindmathpaper
 %
@@ -118,12 +214,12 @@
 %\the\dtuposterwidth\ and \the\textwidth\ 
 
 %\the\camwidth
+%
+%\dtuposterwidth\ and \the\textwidth\ 
+%
+%\the\dtupostersizeratio\ and \the\dtuposterbasefontsize\ 
 
-\dtuposterwidth\ and \the\textwidth\ 
-
-\the\dtupostersizeratio\ and \the\dtuposterbasefontsize\ 
-
-\the\dtupostermmpt\ and \the\dtuposterrefsize\ 
+%\the\dtupostermmpt\ and \the\dtuposterrefsize\ 
 
 
 %\blindtext
