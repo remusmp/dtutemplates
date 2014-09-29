@@ -2,15 +2,22 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
 \usepackage[english]{babel}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.9}
 \usepackage{booktabs}
 \usepackage{siunitx}
-%\usepackage{verdana}
 
-\usetheme[department=kemiteknik]{DTU}
+% Latin Modern
+\usepackage{lmodern}
+% Verdana font type
+%\usepackage{verdana}
+% Helvetica
+%\usepackage{helvet}
+% Times (text and math)
+%\usepackage{newtx, newtxmath}
+
+\usetheme[department=elektro]{DTU}
 
 \title{DTU Beamer Template}
 \author{Remus M. Prunescu}
@@ -197,14 +204,23 @@
 
 \section{Final Remarks}
 
-\subsection{Font}
+\subsection{Fonts}
 \frame{
-	\frametitle{Font}
+	\frametitle{Fonts}
 	\begin{itemize}
-		\item You can change the font to Verdana (DTU recommendation for presentations) by
-        including the verdana package in the header:\textbackslash usepackage\{verdana\}.
-		\item There is a script to install in on Linux systems which might work on OSX as well. 
-		\item For Windows, please download the verdana package directly from  http://www.ctan.org/pkg/verdana or use your MikTex package manager to install it.
+		\item You can set whatever font you like in the preamble. E.g.:
+		\begin{itemize}
+			\item \texttt{\textbackslash usepackage\{lmodern\} \% Latin Modern}
+			\item \texttt{\textbackslash usepackage\{helvet\} \% Helvetica}
+			\item \texttt{\textbackslash usepackage\{verdana\} \% Verdana}
+			\item \texttt{\textbackslash usepackage\{newtx, newtxmath\} \% Times (text and math)}
+		\end{itemize}
+		
+		\item DTU recommends Verdana but this font type is not available by default on all operating systems:
+		\begin{itemize}
+			\item Windows: include the \texttt{verdana} package in the preamble and MiKTeX will do the rest;
+			\item Linux and OS X: before including the \texttt{verdana} package in your preamble, run the \texttt{install\_fonts.sh} script from our package.
+		\end{itemize}
 	\end{itemize}        
 }
 
@@ -217,12 +233,17 @@
 }
 
 \frame{
-	\frametitle{Release History}
+	\frametitle[allowframebreaks]{Release History}
+	\begin{block}{v1.04}
+		\begin{itemize}
+			\item Fonts options;
+		\end{itemize}
+	\end{block}
 	\begin{block}{v1.03}
-			\begin{itemize}
-				\item New logos for \texttt{vindenergi} and \texttt{kemiteknik}.
-			\end{itemize}
-		\end{block}
+		\begin{itemize}
+			\item New logos for \texttt{vindenergi} and \texttt{kemiteknik}.
+		\end{itemize}
+	\end{block}
 	\begin{block}{v1.02}
 		\begin{itemize}
 			\item Date format is now customizable.
