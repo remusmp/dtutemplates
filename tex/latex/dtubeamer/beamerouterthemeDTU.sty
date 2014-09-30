@@ -16,12 +16,18 @@
 % Header
 \setbeamertemplate{headline}
 {
-	\ifdefstring{\bInTitle}{true}
+	\ifdefstring{\bDTUWhiteFrame}{true}
 	{
-		\insertTitleDTULogo
+		\insertFrameDTUWhiteLogo
 	}
 	{
-		\insertFrameDTULogo
+		\ifdefstring{\bInTitle}{true}
+		{
+			\insertTitleDTULogo
+		}
+		{
+			\insertFrameDTULogo
+		}
 	}
 }
 
@@ -45,28 +51,33 @@
 		\global\def\bInTitle{false}
 	}
 	{
-		\hbox{%
-			% The frame counter
-			\hspace{\dimFootlineXOffset}
-			\begin{beamercolorbox}[wd=0.041\paperwidth, left]{framecounter in head/foot}%
-				\usebeamerfont{framecounter in head/foot}\insertframenumber{}
-			\end{beamercolorbox}%
-			 
-			% The department and the university
-			\begin{beamercolorbox}[wd=.45\paperwidth, left]{department in head/foot}%
-				\usebeamerfont{department in head/foot}\insertdepartmentandinstitute
-			\end{beamercolorbox}%
-			
-			% The title of the presentation
-			\begin{beamercolorbox}[wd=.245\paperwidth, right]{title in head/foot}%
-				\usebeamerfont{title in head/foot}\insertshorttitle
-			\end{beamercolorbox}%
-			
-			% The current date
-			\begin{beamercolorbox}[wd=.113\paperwidth, right]{date in head/foot}%
-				\usebeamerfont{date in head/foot}\DTUDateFormat\insertdate
-			\end{beamercolorbox}%
-			\vspace{\dimFootlineYOffset}
+		\ifdefstring{\bDTUWhiteFrame}{true}
+		{
+		}
+		{
+			\hbox{%
+				% The frame counter
+				\hspace{\dimFootlineXOffset}
+				\begin{beamercolorbox}[wd=0.041\paperwidth, left]{framecounter in head/foot}%
+					\usebeamerfont{framecounter in head/foot}\insertframenumber{}
+				\end{beamercolorbox}%
+				 
+				% The department and the university
+				\begin{beamercolorbox}[wd=.45\paperwidth, left]{department in head/foot}%
+					\usebeamerfont{department in head/foot}\insertdepartmentandinstitute
+				\end{beamercolorbox}%
+				
+				% The title of the presentation
+				\begin{beamercolorbox}[wd=.245\paperwidth, right]{title in head/foot}%
+					\usebeamerfont{title in head/foot}\insertshorttitle
+				\end{beamercolorbox}%
+				
+				% The current date
+				\begin{beamercolorbox}[wd=.113\paperwidth, right]{date in head/foot}%
+					\usebeamerfont{date in head/foot}\DTUDateFormat\insertdate
+				\end{beamercolorbox}%
+				\vspace{\dimFootlineYOffset}
+			}
 		}
 	}
 }
@@ -88,7 +99,9 @@
 	{
 		\vspace{\dimFrameTitleOffset}
 	}
-	\vspace{-1pt}\usebeamerfont{frametitle}\color{black}\insertframetitle
+	\vspace{-1pt}\usebeamerfont{frametitle}%
+	\ifdefstring{\bDTUWhiteFrame}{true}{\color{white}}{\color{black}}%
+	\insertframetitle
 	\vspace{\dimAfterFrameTitleOffset}
 }
 
