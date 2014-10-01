@@ -1,25 +1,22 @@
 %==========================================
-%    details and poster setup
-%==========================================
-\newcommand\DTUtitle{My Long Poster Title}
-\newcommand\DTUauthor{ThisIs MyName}
-\newcommand\DTUsubject{This is the subject of my work}
-\newcommand\DTUkeywords{You, could, add, komma-separated, key words}
-%======================================================================
+%===  details and poster setup
 \documentclass[
-%    ,title=\DTUtitle 
-%    ,author=\DTUauthor
-%    ,subject=\DTUsubject
-%    ,keywords=\DTUkeywords
-%%    ,postercolour=black
-    ,3columns
-    ,a0paper
-    ,crop
-%    ,draft          % draw a grid on the background
+%    ,title     = {{Title test}}
+%    ,author    = {{ThisIs MyName}}
+%    ,subject   = {{This is the subject of my work}}
+%    ,bgcolor   = dtulightgreen
+%    ,highlight = dtuyellow
+%    ,toplogo   = {{tex_dtu_aqua_b_uk}}
+%    ,botlogo   = {{tex_dtu_bibliotek_b_uk}}
+%    ,papersize = {{a0paper}}
+%    ,colcount  = {{3columns}}
+%    ,draft
+%    ,crop
 %    ,english        % language
-%    ,parskip=half   % half a lineskip after paragraph
 %    ,fleqn          % equations on the left
 ]{dtuposter}
+%
+%
 %======================================================================
 %===  Continue with packages
 \usepackage[T1]{fontenc}        % special characters
@@ -32,97 +29,53 @@
 %======================================================================
 %=== Font definitions, DTU recommends Arial for posters
 \usepackage{cmbright}
+\usepackage{arevmath}
 %\usepackage[scaled]{uarial} %Arial clone, set as default sf font - use "ua1" for direct access
 \usepackage{uarial} %Arial clone, set as default sf font - use "ua1" for direct access
-\usepackage[typeface=default,
-            sanstypeface=urwarial,
-            mathtypeface=arevmath
-           ]{typeface}
+%\usepackage[typeface=default,
+%            sanstypeface=urwarial,
+%            mathtypeface=arevmath
+%           ]{typeface}
 \renewcommand{\familydefault}{\sfdefault}
-
-
-\usepackage{blindtext,layout}
 %
-%
+% 
+%======================================================================
+%=== The actual content starts here
 \begin{document}
-%%======================================================================
-%%       Draw background
-%%======================================================================
-%%\begin{tikzpicture}
-%%  \begin{pgfonlayer}{background}
-%%   \draw[rounded corners,fill=red] (1,1) rectangle (2,2);
-%%   \draw[fill=blue] (0,0) circle (.8cm);
-%%  \end{pgfonlayer}
-%% \end{tikzpicture}
-%%\end{document}
-%%
-%%======================================================================
-%%       Make header for poster (title and authors)
-%%======================================================================
-%%
-%\begin{posterhead}%
-%\unskip
-%% the author from the document class gets positioned first
-%\textsuperscript{1,*}, Second Author\textsuperscript{2}
-%
-%{\usekomafont{dictum} \textsuperscript{1} Technical University of Denmark, Department of Mechanical Engineering, Nils Koppels Allé, Building 403, 2800 Kgs. Lyngby, Denmark \par
-%\textsuperscript{*} Corresponding author, Tel.: +45 4525 4183, Fax: +45 4588 4325, Email: jowr@mek.dtu.dk \par \vspace*{.5\baselineskip}
-%\textsuperscript{2} RWTH Aachen University, E.ON Energy Research Center -- EBC, Mathieustrasse 6, 52074 Aachen, Germany \par
-%\textsuperscript{3} RWTH Aachen University, E.ON Energy Research Center -- EBC, Mathieustrasse 6, 52074 Aachen, Germany \par ~ }
-%\end{posterhead}
-%%
-%%======================================================================
-%%      Start with text
-%%======================================================================
-%%
-%\begin{postercontent}
-%\section{Motivation \& Methods}
-%Following the above, temperature alone is not suitable to monitor and control a PCS system. As proposed by one, the state of aggregation is directly linked to the latent charge state via the heat of fusion. The authors investigate three methods to determine the solid content of a PCS containing \SI{21}{\percent} paraffin. 
-%
-%\begin{figure}%
-%      \begin{center}%
-%        %\includegraphics[width=.9\linewidth]{img/drawing-cylinder}%
-%        \caption{Cylinder drawing.}%
-%        \label{fig:cylinder}%
-%    \end{center}%
-%\end{figure}%
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Acknowledgement \& References} 
-%The authors thank the German Federal Ministry of Economics and Technology for funding.
 %
 %
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Blind Document} 
-
+%======================================================================
+%===  Make header for poster (title and authors)
 \begin{dtuposterhead} %
 \dtuposterauthor{First Author\textsuperscript{1,*}, Second Author\textsuperscript{2}}
 \dtuposteraffil{\textsuperscript{1} Technical University of Denmark, Department of Mechanical Engineering, Building 403, Lyngby, Denmark}
 \dtuposteraffil*{\textsuperscript{*} Corresponding author, Tel.: +45 4525 4183, Fax: +45 4588 4325, Email: jowr@mek.dtu.dk}
 \dtuposteraffil{\textsuperscript{2} RWTH Aachen University, E.ON Energy Research Center, Mathieustrasse 6, 52074 Aachen, Germany}
 \end{dtuposterhead}
-
+%
+%
+%======================================================================
+%===  ... and the rest of the content
 \begin{dtupostercontent}
 \section{Basic Options}
-
-When loading this poster class, you can pass some options to adapt the file to your needs. 
-There are two groups of options, key-value options and simple options. Key-value options are
-used by writing the option name, the key, followed by the value as in \texttt{title=\{My Poster Title\}}. 
-It is often a good idea to wrap your input with curly brackets. The available key-value options 
-and their default values are:
+When loading this poster class, you can pass some options to adapt the 
+file to your needs. There are two groups of options, key-value options 
+and simple options. Key-value options are used by writing the option 
+name, the key, followed by the value as in \texttt{title=\{My Poster 
+Title\}}. If your input contains spaces or \LaTeX\ commands, you have to
+wrap it with curly brackets. Due to some problems with the option 
+processing, it is highly recommended to use pairs of two curly brackets
+for this purpose. The available key-value options and their 
+default values are:
 \begin{itemize}
-\item \texttt{title=\{This is the Poster Title\}}
-\item \texttt{author=\{This Ismyname\}}
-\item \texttt{subject=\{Subject of the Poster\}}
-\item \texttt{keywords=\{poster, DTU, LaTex\}}
-\item \texttt{bgcolor=\{dtucoolgrey\}}
-\item \texttt{toplogo=\{tex\_dtu\_mekanik\_b\_uk\}}
-\item \texttt{botlogo=\{tex\_dtu\_elektro\_b\_uk\}}
+\item \texttt{title = \{This is the Poster Title\}}
+\item \texttt{author = \{This Ismyname\}}
+\item \texttt{subject = \{Subject of the Poster\}}
+\item \texttt{keywords = \{poster, DTU, LaTex\}}
+\item \texttt{bgcolor = \{dtucoolgrey\}}
+\item \texttt{highlight = \{dtured\}}
+\item \texttt{toplogo = \{tex\_dtu\_mekanik\_b\_uk\}}
+\item \texttt{botlogo = \{tex\_dtu\_elektro\_b\_uk\}}
 \end{itemize}
 The other options are activated by passing them to the class without any value.
 
@@ -200,11 +153,19 @@ The other options are activated by passing them to the class without any value.
 % crop, nocrop
 
 \begin{fadebox}
-\blindtext
+testtdsdfn 
 \end{fadebox}
 
+%\begin{figure}%
+%      \begin{center}%
+%        %\includegraphics[width=.9\linewidth]{img/drawing-cylinder}%
+%        \caption{Cylinder drawing.}%
+%        \label{fig:cylinder}%
+%    \end{center}%
+%\end{figure}%
+
 %
-\blindmathpaper
+%\blindmathpaper
 %
 \end{dtupostercontent}
 %

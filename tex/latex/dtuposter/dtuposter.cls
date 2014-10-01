@@ -1,229 +1,246 @@
-%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{dtuposter}[2012/06/18 v0.8 - package to create posters]
-
-% Standard options that you should pass to the class
+\ProvidesClass{dtuposter}[2014/09/30 v1.0 - package to create posters]
+%
+%
+%======================================================================
+%===  Setting up the class and defining the options
+%
+% Standard options that you should pass to the class, use only kvoptions 
+% to avoid problems.
+\RequirePackage{kvoptions-patch}
 \RequirePackage{kvoptions}
 \DeclareStringOption[This is the Poster Title]{title} % default title
 \DeclareStringOption[This Ismyname]{author}           % default author
 \DeclareStringOption[Subject of the Poster]{subject}  % default subject
 \DeclareStringOption[poster, DTU, LaTex]{keywords}    % default keywords
 \DeclareStringOption[dtucoolgrey]{bgcolor}            % default colour
+\DeclareStringOption[dtured]{highlight}               % default colour
 \DeclareStringOption[tex_dtu_mekanik_b_uk]{toplogo}   % default institute logo
 \DeclareStringOption[tex_dtu_elektro_b_uk]{botlogo}   % default bottom logo
+\DeclareStringOption[a0paper]{papersize}              % default paper size
+\DeclareStringOption[3columns]{colcount}              % default number of columns
+\DeclareBoolOption[false]{draft}
+\DeclareComplementaryOption{final}{draft}
+\DeclareBoolOption[true]{crop}
+\DeclareComplementaryOption{nocrop}{crop}
+%
+% Default option rule
+\DeclareDefaultOption{%
+  \ifx\CurrentOptionValue\relax
+    \ClassWarningNoLine{dtuposter}{%
+      You provided and unknown option '\CurrentOption '. I will pass it on to 'scrartcl' without further processing}
+    \expandafter\PassOptionsToClass
+    \expandafter{\CurrentOption}{scrartcl}%
+  \else
+    \ClassWarningNoLine{dtuposter}{%
+      You provided and unknown option '\CurrentOptionKey ' with value '\CurrentOptionValue '.
+      I will pass it on to 'scrartcl' without further processing}%
+    \PassOptionsToClass{\CurrentOptionKey = \CurrentOptionValue}{scrartcl}%  
+  \fi
+}
+%
+\ProcessKeyvalOptions{dtuposter}\relax
 %
 %
+%======================================================================
+%===  Define functions to be called according to the options
 \InputIfFileExists{dtucolours}{
-  \ClassInfo{dtuposter}{Successfully loaded the DTU colours.}
+  \ClassInfo{dtuposter}{Successfully loaded the DTU colours}
 }{
-  \ClassWarning{dtuposter}{Could not load the colours from dtucolours.sty. This compilation is likely to fail.}
+  \ClassWarning{dtuposter}{Could not load the colours from dtucolours.sty. This compilation is likely to fail}
 }%
+%
+\RequirePackage{etoolbox,trace}
+\long\def\ifequal#1#2#3#4{\expandafter\ifstrequal\expandafter{#1}{#2}{#3}{#4}}
+%
 %
 %======================================================================
 %===  Default paper and font sizes
 \RequirePackage{calc,fp,tikz}
 \usetikzlibrary{shapes,calc,positioning,backgrounds,shadings}
+%\pgfdeclarelayer{background}
+%\pgfdeclarelayer{foreground}
+%\pgfsetlayers{background,main,foreground}
 %
 %% Convert mm to pt
 \FPset{\dtuposter@mmpt}{2.83464567}
 \FPmul{\dtuposter@refsize}{\dtuposter@mmpt}{1189}
 %
-\DeclareOption{a0paper}{
+\ifequal{\dtuposter@papersize}{a0paper}{%
   %%A0 paper 841 x 1189 mm
   \FPmul\dtuposterwidth{841}{\dtuposter@mmpt}
   \FPmul\dtuposterheight{1189}{\dtuposter@mmpt}
   \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
-  \PassOptionsToClass{\CurrentOption}{scrartcl}
-  \PassOptionsToPackage{\CurrentOption}{geometry}
+  \PassOptionsToClass{a0paper}{scrartcl}
+  \PassOptionsToPackage{a0paper}{geometry}}{
+		\ifequal{\dtuposter@papersize}{a1paper}{%
+		  %%A1 paper 594 x 841 mm
+		  \FPmul\dtuposterwidth{594}{\dtuposter@mmpt}
+		  \FPmul\dtuposterheight{841}{\dtuposter@mmpt}
+		  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+		  \PassOptionsToClass{a1paper}{scrartcl}
+		  \PassOptionsToPackage{a1paper}{geometry}}{
+				\ifequal{\dtuposter@papersize}{a2paper}{%
+				  %%A4 paper 420 x 595 mm
+				  \FPmul\dtuposterwidth{420}{\dtuposter@mmpt}
+				  \FPmul\dtuposterheight{595}{\dtuposter@mmpt}
+				  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+				  \PassOptionsToClass{a2paper}{scrartcl}
+				  \PassOptionsToPackage{a2paper}{geometry}}{
+						\ifequal{\dtuposter@papersize}{a3paper}{%
+						  %%A4 paper 297 x 421 mm
+						  \FPmul\dtuposterwidth{297}{\dtuposter@mmpt}
+						  \FPmul\dtuposterheight{421}{\dtuposter@mmpt}
+						  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+						  \PassOptionsToClass{a3paper}{scrartcl}
+						  \PassOptionsToPackage{a3paper}{geometry}}{
+								\ifequal{\dtuposter@papersize}{a4paper}{%
+								  %%A4 paper 210 x 297 mm
+								  \FPmul\dtuposterwidth{210}{\dtuposter@mmpt}
+								  \FPmul\dtuposterheight{297}{\dtuposter@mmpt}
+								  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
+								  \PassOptionsToClass{a4paper}{scrartcl}
+								  \PassOptionsToPackage{a4paper}{geometry}}{
+									   \ClassError{dtuposter}{
+									     value '\dtuposter@papersize'< unkown \MessageBreak
+									     possible values are: a0paper, a1paper, a2paper, a3paper or a4paper}
+								}
+						}
+				}
+		}
 }
-\DeclareOption{a1paper}{
-  %%A1 paper 594 x 841 mm
-  \FPmul\dtuposterwidth{594}{\dtuposter@mmpt}
-  \FPmul\dtuposterheight{841}{\dtuposter@mmpt}
-  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
-  \PassOptionsToClass{\CurrentOption}{scrartcl}
-  \PassOptionsToPackage{\CurrentOption}{geometry}
-}
-\DeclareOption{a2paper}{
-  %%A4 paper 420 x 595 mm
-  \FPmul\dtuposterwidth{420}{\dtuposter@mmpt}
-  \FPmul\dtuposterheight{595}{\dtuposter@mmpt}
-  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
-  \PassOptionsToClass{\CurrentOption}{scrartcl}
-  \PassOptionsToPackage{\CurrentOption}{geometry}
-}
-\DeclareOption{a3paper}{
-  %%A4 paper 297 x 421 mm
-  \FPmul\dtuposterwidth{297}{\dtuposter@mmpt}
-  \FPmul\dtuposterheight{421}{\dtuposter@mmpt}
-  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
-  \PassOptionsToClass{\CurrentOption}{scrartcl}
-  \PassOptionsToPackage{\CurrentOption}{geometry}
-}
-\DeclareOption{a4paper}{
-  %%A4 paper 210 x 297 mm
-  \FPmul\dtuposterwidth{210}{\dtuposter@mmpt}
-  \FPmul\dtuposterheight{297}{\dtuposter@mmpt}
-  \FPdiv\dtuposter@sizeratio{\dtuposterheight}{\dtuposter@refsize}
-  \PassOptionsToClass{\CurrentOption}{scrartcl}
-  \PassOptionsToPackage{\CurrentOption}{geometry}
-}
-% default
-\ExecuteOptions{a0paper}
 %
 %======================================================================
 %===  Define margins according to "DTU_Poster_A0_HOEJ_2sp.Skabelon.cs2"
-\newcommand\dtuposter@setpapersize{
-  %\FPmul\dtuposter@tmp{\dtuposter@mmpt}{\dtuposter@sizeratio}
-  %
-  \FPmul\dtuposter@tmp{  20}{\dtuposter@sizeratio}
-  \newlength{\bgmarginleftright}%
-  \setlength{\bgmarginleftright}{\dtuposter@tmp mm}
-  \FPmul\dtuposter@tmp{  30}{\dtuposter@sizeratio}
-  \newlength{\bgmargintop}%
-  \setlength{\bgmargintop}{\dtuposter@tmp mm}
-  %\FPmul\dtuposter@tmp{20}{\dtuposter@sizeratio}
-  %\newlength{\bgheight}%
-  %\setlength{\bgheight}{\dtuposter@tmp pt * 0}
-  %\addtolength{\bgheight}{\paperheight}
-  %
-  \FPmul\dtuposter@tmp{ 120}{\dtuposter@sizeratio}
-  \newlength{\bgfirstline}%
-  \setlength{\bgfirstline}{\dtuposter@tmp mm}
-  \FPmul\dtuposter@tmp{1080}{\dtuposter@sizeratio}
-  \newlength{\bgsecondline}%
-  \setlength{\bgsecondline}{\dtuposter@tmp mm}
-  \FPmul\dtuposter@tmp{   5}{\dtuposter@sizeratio}
-  \newlength{\bglinewidth}%
-  \setlength{\bglinewidth}{\dtuposter@tmp pt}
-  %
-  \FPmul\dtuposter@tmp{  40}{\dtuposter@sizeratio}
-  \newlength{\textmarginleftright}%
-  \setlength{\textmarginleftright}{\dtuposter@tmp mm}
-  \FPmul\dtuposter@tmp{ 150}{\dtuposter@sizeratio}
-  \newlength{\textmargintop}%
-  \setlength{\textmargintop}{\dtuposter@tmp mm}
-  \FPmul\dtuposter@tmp{ 130}{\dtuposter@sizeratio}
-  \newlength{\textmarginbottom}%
-  \setlength{\textmarginbottom}{\dtuposter@tmp mm}
-  %
-  \FPmul\dtuposter@tmp{20}{\dtuposter@sizeratio}
-  \newlength{\textintercolumn}%
-  \setlength{\textintercolumn}{\dtuposter@tmp mm} % The design guide says 10, but that is really small
-  %
-  \newlength{\toplogoleft}%
-  \setlength{\toplogoleft}{\textmarginleftright} 
-  \FPmul\dtuposter@tmp{50}{\dtuposter@sizeratio}
-  \newlength{\toplogotop}%
-  \setlength{\toplogotop}{\dtuposter@tmp mm} 
-  \FPmul\dtuposter@tmp{43.25}{\dtuposter@sizeratio}
-  \newlength{\toplogoheight}%
-  \setlength{\toplogoheight}{\dtuposter@tmp mm} 
-  %
-  \newlength{\dtulogoright}%
-  \setlength{\dtulogoright}{\textmarginleftright} 
-  \FPmul\dtuposter@tmp{30}{\dtuposter@sizeratio}
-  \newlength{\dtulogotop}%
-  \setlength{\dtulogotop}{\dtuposter@tmp mm} 
-  \FPmul\dtuposter@tmp{44.5}{\dtuposter@sizeratio}
-  \newlength{\dtulogowidth}%
-  \setlength{\dtulogowidth}{\dtuposter@tmp mm}
-  %
-  \FPmul\dtuposter@tmp{1125}{\dtuposter@sizeratio}
-  \newlength{\footerimagetop}%
-  \setlength{\footerimagetop}{\dtuposter@tmp mm}
-  %\FPmul\dtuposter@tmp{  40}{\dtuposter@sizeratio}
-  %\newlength{\footerimageleft}%
-  %\setlength{\footerimageleft}{\dtuposter@tmp mm}
-  %
-  \newlength{\footerimagewidth}%
-  \setlength{\footerimagewidth}{\dtuposterwidth pt}
-  \addtolength{\footerimagewidth}{-2\textmarginleftright} % left and right
-  \addtolength{\footerimagewidth}{-3\textmarginleftright} % in between the 4 images
-  \addtolength{\footerimagewidth}{-0.75\footerimagewidth} % 4 images => 1/4 of length
-  %
-  \PassOptionsToPackage{%
-    centering,%
-    pdftex,%
-    paperwidth=\dtuposterwidth pt,%
-    paperheight=\dtuposterheight pt,%
-    bindingoffset=0.0pt,
-    footskip=0.0in,
-    left=\textmarginleftright,%
-    right=\textmarginleftright,%
-    top=\textmargintop,%
-    bottom=\textmarginbottom,%
-    nohead}{geometry}
-  \RequirePackage{geometry}
-}
+\FPmul\dtuposter@tmp{  20}{\dtuposter@sizeratio}
+\newlength{\bgmarginleftright}%
+\setlength{\bgmarginleftright}{\dtuposter@tmp mm}
+\FPmul\dtuposter@tmp{  30}{\dtuposter@sizeratio}
+\newlength{\bgmargintop}%
+\setlength{\bgmargintop}{\dtuposter@tmp mm}
+%\FPmul\dtuposter@tmp{20}{\dtuposter@sizeratio}
+%\newlength{\bgheight}%
+%\setlength{\bgheight}{\dtuposter@tmp pt * 0}
+%\addtolength{\bgheight}{\paperheight}
+%
+\FPmul\dtuposter@tmp{ 120}{\dtuposter@sizeratio}
+\newlength{\bgfirstline}%
+\setlength{\bgfirstline}{\dtuposter@tmp mm}
+\FPmul\dtuposter@tmp{1080}{\dtuposter@sizeratio}
+\newlength{\bgsecondline}%
+\setlength{\bgsecondline}{\dtuposter@tmp mm}
+\FPmul\dtuposter@tmp{   5}{\dtuposter@sizeratio}
+\newlength{\bglinewidth}%
+\setlength{\bglinewidth}{\dtuposter@tmp pt}
+%
+\FPmul\dtuposter@tmp{  40}{\dtuposter@sizeratio}
+\newlength{\textmarginleftright}%
+\setlength{\textmarginleftright}{\dtuposter@tmp mm}
+\FPmul\dtuposter@tmp{ 150}{\dtuposter@sizeratio}
+\newlength{\textmargintop}%
+\setlength{\textmargintop}{\dtuposter@tmp mm}
+\FPmul\dtuposter@tmp{ 130}{\dtuposter@sizeratio}
+\newlength{\textmarginbottom}%
+\setlength{\textmarginbottom}{\dtuposter@tmp mm}
+%
+\FPmul\dtuposter@tmp{20}{\dtuposter@sizeratio}
+\newlength{\textintercolumn}%
+\setlength{\textintercolumn}{\dtuposter@tmp mm} % The design guide says 10, but that is really small
+%
+\newlength{\toplogoleft}%
+\setlength{\toplogoleft}{\textmarginleftright} 
+\FPmul\dtuposter@tmp{50}{\dtuposter@sizeratio}
+\newlength{\toplogotop}%
+\setlength{\toplogotop}{\dtuposter@tmp mm} 
+\FPmul\dtuposter@tmp{43.25}{\dtuposter@sizeratio}
+\newlength{\toplogoheight}%
+\setlength{\toplogoheight}{\dtuposter@tmp mm} 
+%
+\newlength{\dtulogoright}%
+\setlength{\dtulogoright}{\textmarginleftright} 
+\FPmul\dtuposter@tmp{30}{\dtuposter@sizeratio}
+\newlength{\dtulogotop}%
+\setlength{\dtulogotop}{\dtuposter@tmp mm} 
+\FPmul\dtuposter@tmp{44.5}{\dtuposter@sizeratio}
+\newlength{\dtulogowidth}%
+\setlength{\dtulogowidth}{\dtuposter@tmp mm}
+%
+\FPmul\dtuposter@tmp{1125}{\dtuposter@sizeratio}
+\newlength{\footerimagetop}%
+\setlength{\footerimagetop}{\dtuposter@tmp mm}
+%\FPmul\dtuposter@tmp{  40}{\dtuposter@sizeratio}
+%\newlength{\footerimageleft}%
+%\setlength{\footerimageleft}{\dtuposter@tmp mm}
+%
+\newlength{\footerimagewidth}%
+\setlength{\footerimagewidth}{\dtuposterwidth pt}
+\addtolength{\footerimagewidth}{-2\textmarginleftright} % left and right
+\addtolength{\footerimagewidth}{-3\textmarginleftright} % in between the 4 images
+\addtolength{\footerimagewidth}{-0.75\footerimagewidth} % 4 images => 1/4 of length
+%
+\PassOptionsToPackage{%
+  centering,%
+  pdftex,%
+  paperwidth=\dtuposterwidth pt,%
+  paperheight=\dtuposterheight pt,%
+  bindingoffset=0.0pt,
+  footskip=0.0in,
+  left=\textmarginleftright,%
+  right=\textmarginleftright,%
+  top=\textmargintop,%
+  bottom=\textmarginbottom,%
+  nohead}{geometry}
 %
 %
 %======================================================================
 %===  Default cropping for oversize paper
 \newlength{\cropleftright}%
 \newlength{\croptopbottom}%  
-\providecommand\dtuposter@setcropsize{}
 %
-\DeclareOption{nocrop}{
-  \renewcommand\dtuposter@setcropsize{
-	  \setlength{\cropleftright}{0pt}
-	  \setlength{\croptopbottom}{0pt}
-	}
-}
-\DeclareOption{crop}{
-  \renewcommand\dtuposter@setcropsize{
-	  \FPdiv\dtuposter@camwidth{\dtuposterwidth}{\dtuposter@mmpt} % back to mm
-	  \FPadd\dtuposter@camwidth{\dtuposter@camwidth}{30}
-	  \FPdiv\dtuposter@camheight{\dtuposterheight}{\dtuposter@mmpt} % back to mm
-	  \FPadd\dtuposter@camheight{\dtuposter@camheight}{40}
-	  \PassOptionsToPackage{cam,axes,info,width=\dtuposter@camwidth truemm,height=\dtuposter@camheight truemm,pdflatex,center}{crop}
-	  
-	  \FPmul\dtuposter@tmp{\dtuposter@camwidth}{\dtuposter@mmpt} % width in points
-	  \FPsub\dtuposter@tmp{\dtuposter@tmp}{\dtuposterwidth}
-	  \FPdiv\dtuposter@tmp{\dtuposter@tmp}{2}
-	  \setlength{\cropleftright}{\dtuposter@tmp pt}
-	  
-	  \FPmul\dtuposter@tmp{\dtuposter@camheight}{\dtuposter@mmpt} % height in points
-	  \FPsub\dtuposter@tmp{\dtuposter@tmp}{\dtuposterheight}
-	  \FPdiv\dtuposter@tmp{\dtuposter@tmp}{2}
-	  \setlength{\croptopbottom}{\dtuposter@tmp pt}
-	  \RequirePackage{crop}
-  }
-}
-% default
-\ExecuteOptions{crop}
+\ifdtuposter@crop%
+  \FPdiv\dtuposter@camwidth{\dtuposterwidth}{\dtuposter@mmpt} % back to mm
+  \FPadd\dtuposter@camwidth{\dtuposter@camwidth}{30}%
+  \FPdiv\dtuposter@camheight{\dtuposterheight}{\dtuposter@mmpt} % back to mm
+  \FPadd\dtuposter@camheight{\dtuposter@camheight}{40}%
+  \PassOptionsToPackage{cam,axes,info,width=\dtuposter@camwidth truemm,height=\dtuposter@camheight truemm,pdflatex,center}{crop}%
+  %
+  \FPmul\dtuposter@tmp{\dtuposter@camwidth}{\dtuposter@mmpt} % width in points
+  \FPsub\dtuposter@tmp{\dtuposter@tmp}{\dtuposterwidth}%
+  \FPdiv\dtuposter@tmp{\dtuposter@tmp}{2}%
+  \setlength{\cropleftright}{\dtuposter@tmp pt}%
+  %
+  \FPmul\dtuposter@tmp{\dtuposter@camheight}{\dtuposter@mmpt} % height in points
+  \FPsub\dtuposter@tmp{\dtuposter@tmp}{\dtuposterheight}%
+  \FPdiv\dtuposter@tmp{\dtuposter@tmp}{2}%
+  \setlength{\croptopbottom}{\dtuposter@tmp pt}%
+\else%
+ \setlength{\cropleftright}{0pt}%
+ \setlength{\croptopbottom}{0pt}%
+\fi%
 %
 %
 %======================================================================
-%===  Default font size, enlarge the font size for 2 columns
-\DeclareOption{3columns}{
+%===  Default font size, enlarge the font size for less than 3 columns
+\ifequal{\dtuposter@colcount}{3columns}{
   \FPset\dtuposter@columncount{3}
-  \FPset\dtuposter@fontsizefactor{1}
+  \FPset\dtuposter@fontsizefactor{1}}{
+		\ifequal{\dtuposter@colcount}{2columns}{
+		  \FPset\dtuposter@columncount{2}
+		  \FPdiv\dtuposter@fontsizefactor{48}{35}}{
+				\ifequal{\dtuposter@colcount}{1column}{
+				  \FPset\dtuposter@columncount{1}
+				  \FPdiv\dtuposter@fontsizefactor{48}{35}}{
+				    \ClassError{dtuposter}{
+				      You apssed an unknown value '\dtuposter@colcount' to
+				      the 'colcount' options, possible values are: 
+				      3columns, 2columns or 1column}
+				}
+		}
 }
-\DeclareOption{2columns}{
-  \FPset\dtuposter@columncount{2}
-  \FPdiv\dtuposter@fontsizefactor{48}{35}
-}
-\DeclareOption{1columns}{
-  \FPset\dtuposter@columncount{1}
-  \FPdiv\dtuposter@fontsizefactor{48}{35}
-}
-\DeclareOption{1column}{
-  \ExecuteOptions{1columns}
-}
-\DeclareOption{0columns}{
-  \ExecuteOptions{1columns}
-}
-\DeclareOption{0column}{
-  \ExecuteOptions{1columns}
-}
-% default
-\ExecuteOptions{3columns}
 %
 %
 %======================================================================
 %===  Define fonts according to "DTU_Poster_A0_HOEJ_2sp.Skabelon.cs2"
-%
 \newlength\dtuposter@tmpfontsize
 \newlength\dtuposter@tmplinespace
 \newcommand{\dtuposter@fs}[3]{ %
@@ -237,39 +254,45 @@
 }
 %
 \newcommand\dtuposter@setfonts{
-  \setkomafont{title}{       \normalfont\dtuposter@fs{160}{170}{1}\bfseries\color{dtured}} % used with title
+  \setkomafont{title}{       \normalfont\dtuposter@fs{160}{170}{1}\bfseries\color{\dtuposter@highlight}} % used with title
   \setkomafont{minisec}{     \normalfont\dtuposter@fs{ 60}{ 70}{1}\bfseries} % used for authors
   \setkomafont{dictum}{      \normalfont\dtuposter@fs{ 48}{ 60}{1}} % used for affiliation
-  \setkomafont{section}{     \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries} % section
+  \setkomafont{section}{     \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries\color{\dtuposter@highlight}} % section
   \setkomafont{subsection}{  \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries} % subsection
   \setkomafont{caption}{     \normalfont\dtuposter@fs{ 15}{ 24}{1}\bfseries} % table and figure caption
-  \setkomafont{captionlabel}{\usekomafont{caption}\color{dtured}}              % label looks the same
+  \setkomafont{captionlabel}{\usekomafont{caption}\color{\highlight}}              % label looks the same
 }
 %
 %
 %======================================================================
 %===  change the background for drafting
-\providecommand\dtuposter@drawgrid{}
+\providecommand\dtuposter@drawgrid{}%
 %
-\DeclareOption{draft}{%
+\ifdtuposter@draft%
   \renewcommand\dtuposter@drawgrid{%
     \begin{tikzpicture}[remember picture,overlay] %
+    %\begin{pgfonlayer}{foreground}
       \node [inner sep=0pt,above right] at (current page.north west){ %
-        \begin{tikzpicture}[remember picture,overlay]
-          \draw[step=2cm,color=lightgray] (0,0) grid (\paperwidth,-\paperheight); %
-        \end{tikzpicture}
-      };
-    \end{tikzpicture}
+        \begin{tikzpicture}[remember picture,overlay] %
+          \draw[step=2cm,color=magenta!10] (0,0) grid (\paperwidth,-\paperheight); %
+        \end{tikzpicture} %
+      }; %
+    %\end{pgfonlayer}
+    \end{tikzpicture} %
   } %
-  \PassOptionsToClass{\CurrentOption}{scrartcl}%
-}
+  \PassOptionsToClass{draft=true}{scrartcl}%
+\else
+  \renewcommand\dtuposter@drawgrid{}%
+  \PassOptionsToClass{draft=false}{scrartcl}%
+
+\fi
 %
 %
 %======================================================================
 %===  Use tikz to draw the background 
 \newcommand{\dtuposter@drawbg}{ %
   \begin{tikzpicture}[remember picture,overlay] %
-    \begin{pgfonlayer}{background}
+    %\begin{pgfonlayer}{background}
 	    % set base node as marker
 	    \node [inner sep=0pt,above right] at (current page.north west){ %
 	      \begin{tikzpicture}[remember picture,overlay]
@@ -285,19 +308,9 @@
 		      \draw (4\textmarginleftright+3\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}};
 	      \end{tikzpicture} %
 	    }; %
-    \end{pgfonlayer} %
+    %\end{pgfonlayer} %
   \end{tikzpicture} %
 }%
-%
-%
-%======================================================================
-%===  Passes unknown options to the underlying scrartcl class
-\DeclareOption*{%
-  \PassOptionsToClass{\CurrentOption}{scrartcl}%  
-}
-%% Process given options
-\ProcessOptions\relax
-\ProcessKeyvalOptions*
 %
 %
 %======================================================================
@@ -317,11 +330,12 @@
 \LoadClass{scrartcl}
 \pagestyle{empty}
 \setlength\parindent{0pt}
-\dtuposter@setpapersize
-\dtuposter@setcropsize
+\RequirePackage{geometry}
+\RequirePackage{crop}%
+%
 \AtBeginDocument{\dtuposter@setfonts} 
 \AtBeginDocument{\dtuposter@drawbg}
-\AtBeginDocument{\dtuposter@drawgrid} 
+\AtEndDocument{\dtuposter@drawgrid} 
 %
 %
 %======================================
@@ -428,12 +442,12 @@
   {\begin{lrbox}{\@tempboxa}\begin{minipage}{\linewidth}} %
   {\end{minipage}\end{lrbox} % box created, now load the rest
     \begin{tikzpicture} %
-      \begin{pgfonlayer}{background} %
+      %\begin{pgfonlayer}{background} %
       % set base node as marker
       \node [inner sep=0.5ex,line width=\bglinewidth,outer color=\dtuposter@bgcolor!0,inner color=white,draw=\dtuposter@bgcolor!5,rounded corners=2\bglinewidth] { %
         \usebox{\@tempboxa} %
       }; %
-      \end{pgfonlayer} %
+      %\end{pgfonlayer} %
     \end{tikzpicture} %\par
   } %
 %
