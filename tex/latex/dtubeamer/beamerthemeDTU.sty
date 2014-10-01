@@ -218,7 +218,11 @@
 }
 
 \newcommand{\blackDTUFrameStyle}{
-	\setbeamercolor{background canvas}{bg=black}
+	\setbeamertemplate{background}{
+		\begin{tikzpicture}[remember picture, overlay]
+			\draw [fill=black] (0, 0) rectangle (\paperwidth, -\paperheight);
+		\end{tikzpicture}
+	}
 	\color{white}
 }
 
