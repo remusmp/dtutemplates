@@ -212,25 +212,15 @@
 \setbeamercolor{block body}{fg=black,bg=white}
 	
 \newcommand{\defaultDTUFrameStyle}{
-	\setbeamercolor{background canvas}{bg=white}
 	\setbeamertemplate{background}{}
 	\color{black}
-}
-
-\newcommand{\blackDTUFrameStyle}{
-	\setbeamertemplate{background}{
-		\begin{tikzpicture}[remember picture, overlay]
-			\draw [fill=black] (0, 0) rectangle (\paperwidth, -\paperheight);
-		\end{tikzpicture}
-	}
-	\color{white}
 }
 
 % White DTU frame
 \makeatletter
 \define@key{beamerframe}{dtuwhitelogo}[true]{%
 	\global\def\bDTUWhiteFrame{true}
-	\blackDTUFrameStyle
+	\color{white}
 }
 \define@key{beamerframe}{bgfilename}{%
 	\setbeamertemplate{background}{
