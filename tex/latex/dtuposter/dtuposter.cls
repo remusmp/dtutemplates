@@ -9,7 +9,7 @@
 %
 % Standard options that you should pass to the class, use only kvoptions 
 % to avoid problems.
-\RequirePackage{kvoptions-patch}
+%\RequirePackage{kvoptions-patch}
 \RequirePackage{kvoptions}
 \DeclareStringOption[This is the Poster Title]{title} % default title
 \DeclareStringOption[This Ismyname]{author}           % default author
@@ -124,6 +124,7 @@
 %
 %======================================================================
 %===  Define margins according to "DTU_Poster_A0_HOEJ_2sp.Skabelon.cs2"
+\newcommand{\dtuposter@setpapersize}{
 \FPmul\dtuposter@tmp{  20}{\dtuposter@sizeratio}
 \newlength{\bgmarginleftright}%
 \setlength{\bgmarginleftright}{\dtuposter@tmp mm}
@@ -208,14 +209,17 @@
   top=\textmargintop,%
   bottom=\textmarginbottom,%
   nohead}{geometry}
+}
 %
 %
 %======================================================================
 %===  Default cropping for oversize paper
 \newlength{\cropleftright}%
 \newlength{\croptopbottom}%  
+\providecommand{\dtuposter@setcropsize}{}
 %
 \ifdtuposter@crop%
+  \renewcommand{\dtuposter@setcropsize}{
   \FPdiv\dtuposter@camwidth{\dtuposterwidth}{\dtuposter@mmpt} % back to mm
   \FPadd\dtuposter@camwidth{\dtuposter@camwidth}{30}%
   \FPdiv\dtuposter@camheight{\dtuposterheight}{\dtuposter@mmpt} % back to mm
@@ -231,6 +235,7 @@
   \FPsub\dtuposter@tmp{\dtuposter@tmp}{\dtuposterheight}%
   \FPdiv\dtuposter@tmp{\dtuposter@tmp}{2}%
   \setlength{\croptopbottom}{\dtuposter@tmp pt}%
+  }
 \else%
  \setlength{\cropleftright}{0pt}%
  \setlength{\croptopbottom}{0pt}%
@@ -284,7 +289,6 @@
   \setkomafont{caption}{     \normalfont\dtuposter@fs{ 15}{ 24}{1}\bfseries} % table and figure caption
   \setkomafont{captionlabel}{\usekomafont{caption}\color{\highlight}}              % label looks the same
 }
-\AtBeginDocument{\dtuposter@setfonts} 
 %
 %
 %======================================================================
@@ -316,26 +320,26 @@
 %===  Use tikz to draw the background 
 \newcommand{\dtuposter@drawbg}{ %
   \begin{tikzpicture}[remember picture,overlay] %
-    \begin{pgfonlayer}{background}
+    \begin{pgfonlayer}{background}%
 	    % set base node as marker
 	    \node [inner sep=0pt,above right] at (current page.north west){ %
-	      \begin{tikzpicture}[remember picture,overlay]
-		      \draw (\toplogoleft,-\toplogotop) node[inner sep=0pt, below right] {\includegraphics[height=\toplogoheight]{\dtuposter@toplogo}}; 
-		      \draw (\paperwidth-\dtulogoright,-\dtulogotop) node[inner sep=0pt, below left] {\includegraphics[width=\dtulogowidth]{tex_dtu_logo}}; 
-		      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor!10] (\bgmarginleftright,-\bgfirstline-\bglinewidth) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline); 
-		      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor]    (\bgmarginleftright,-\bgfirstline) rectangle (\paperwidth-\bgmarginleftright,-\bgfirstline-\bglinewidth); 
-		      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor]    (\bgmarginleftright,-\bgsecondline) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline-\bglinewidth); 
+	      \begin{tikzpicture}[remember picture,overlay]%
+		      \draw (\toplogoleft,-\toplogotop) node[inner sep=0pt, below right] {\includegraphics[height=\toplogoheight]{\dtuposter@toplogo}}; %
+		      \draw (\paperwidth-\dtulogoright,-\dtulogotop) node[inner sep=0pt, below left] {\includegraphics[width=\dtulogowidth]{tex_dtu_logo}}; %
+		      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor!10] (\bgmarginleftright,-\bgfirstline-\bglinewidth) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline); %
+		      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor]    (\bgmarginleftright,-\bgfirstline) rectangle (\paperwidth-\bgmarginleftright,-\bgfirstline-\bglinewidth); %
+		      \filldraw[inner sep=0pt,color=\dtuposter@bgcolor]    (\bgmarginleftright,-\bgsecondline) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline-\bglinewidth); %
 		      %
-		      \draw (1\textmarginleftright+0\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}};
-		      \draw (2\textmarginleftright+1\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}};
-		      \draw (3\textmarginleftright+2\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}};
-		      \draw (4\textmarginleftright+3\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}};
+		      \draw (1\textmarginleftright+0\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}}; %
+		      \draw (2\textmarginleftright+1\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}}; %
+		      \draw (3\textmarginleftright+2\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}}; %
+		      \draw (4\textmarginleftright+3\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}}; %
 	      \end{tikzpicture} %
 	    }; %
     \end{pgfonlayer} %
   \end{tikzpicture} %
 }%
-\AtBeginDocument{\dtuposter@drawbg}
+
 %
 %
 %======================================================================
@@ -356,9 +360,13 @@
 \LoadClass{scrartcl}
 \pagestyle{empty}
 \setlength\parindent{0pt}
+\dtuposter@setpapersize
 \RequirePackage{geometry}
+\dtuposter@setcropsize
 \RequirePackage{crop}%
 %
+\AtBeginDocument{\dtuposter@drawbg}
+\AtBeginDocument{\dtuposter@setfonts} 
 %
 %======================================
 %==  Details for pdf files
