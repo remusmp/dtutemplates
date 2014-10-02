@@ -4,6 +4,8 @@
 %
 %======================================================================
 %===  Setting up the class and defining the options
+\RequirePackage{trace}
+\newcommand\stdout[1]{\ClassWarningNoLine{dtuposter}{#1}}
 %
 % Standard options that you should pass to the class, use only kvoptions 
 % to avoid problems.
@@ -35,7 +37,7 @@
     \ClassWarningNoLine{dtuposter}{%
       You provided and unknown option '\CurrentOptionKey ' with value '\CurrentOptionValue '.
       I will pass it on to 'scrartcl' without further processing}%
-    \PassOptionsToClass{\CurrentOptionKey = \CurrentOptionValue}{scrartcl}%  
+    \expandafter\PassOptionsToClass{\expandafter\CurrentOptionKey = \expandafter\CurrentOptionValue}{scrartcl}%  
   \fi
 }
 %
@@ -58,15 +60,21 @@
 %===  Default paper and font sizes
 \RequirePackage{calc,fp,tikz}
 \usetikzlibrary{shapes,calc,positioning,backgrounds,shadings}
+%
+%% Convert mm to pt
+\FPset{\dtuposter@mmpt}{2.83464567}
+\FPdiv{\dtuposter@ptmm}{1}{\dtuposter@mmpt}
+\FPmul{\dtuposter@refsize}{\dtuposter@mmpt}{1189}
+%
+\newcommand{\getlengthmm}[1]{\strip@pt\dimexpr\dtuposter@ptmm\dimexpr#1\relax\relax}
+\newcommand{\getlengthpt}[1]{\strip@pt\dimexpr1.0\dimexpr#1\relax\relax}
 %\pgfdeclarelayer{background}
 %\pgfdeclarelayer{foreground}
 %\pgfsetlayers{background,main,foreground}
 %
-%% Convert mm to pt
-\FPset{\dtuposter@mmpt}{2.83464567}
-\FPmul{\dtuposter@refsize}{\dtuposter@mmpt}{1189}
 %
 \ifequal{\dtuposter@papersize}{a0paper}{%
+  \stdout{papersize switch: detected a0paper}
   %%A0 paper 841 x 1189 mm
   \FPmul\dtuposterwidth{841}{\dtuposter@mmpt}
   \FPmul\dtuposterheight{1189}{\dtuposter@mmpt}
@@ -74,6 +82,7 @@
   \PassOptionsToClass{a0paper}{scrartcl}
   \PassOptionsToPackage{a0paper}{geometry}}{
 		\ifequal{\dtuposter@papersize}{a1paper}{%
+		  \stdout{papersize switch: detected a1paper}
 		  %%A1 paper 594 x 841 mm
 		  \FPmul\dtuposterwidth{594}{\dtuposter@mmpt}
 		  \FPmul\dtuposterheight{841}{\dtuposter@mmpt}
@@ -81,6 +90,7 @@
 		  \PassOptionsToClass{a1paper}{scrartcl}
 		  \PassOptionsToPackage{a1paper}{geometry}}{
 				\ifequal{\dtuposter@papersize}{a2paper}{%
+  				\stdout{papersize switch: detected a2paper}
 				  %%A4 paper 420 x 595 mm
 				  \FPmul\dtuposterwidth{420}{\dtuposter@mmpt}
 				  \FPmul\dtuposterheight{595}{\dtuposter@mmpt}
@@ -88,6 +98,7 @@
 				  \PassOptionsToClass{a2paper}{scrartcl}
 				  \PassOptionsToPackage{a2paper}{geometry}}{
 						\ifequal{\dtuposter@papersize}{a3paper}{%
+						 \stdout{papersize switch: detected a3paper}
 						  %%A4 paper 297 x 421 mm
 						  \FPmul\dtuposterwidth{297}{\dtuposter@mmpt}
 						  \FPmul\dtuposterheight{421}{\dtuposter@mmpt}
@@ -95,6 +106,7 @@
 						  \PassOptionsToClass{a3paper}{scrartcl}
 						  \PassOptionsToPackage{a3paper}{geometry}}{
 								\ifequal{\dtuposter@papersize}{a4paper}{%
+  								\stdout{papersize switch: detected a4paper}
 								  %%A4 paper 210 x 297 mm
 								  \FPmul\dtuposterwidth{210}{\dtuposter@mmpt}
 								  \FPmul\dtuposterheight{297}{\dtuposter@mmpt}
@@ -115,9 +127,11 @@
 \FPmul\dtuposter@tmp{  20}{\dtuposter@sizeratio}
 \newlength{\bgmarginleftright}%
 \setlength{\bgmarginleftright}{\dtuposter@tmp mm}
+\stdout{background margin side: \dtuposter@tmp mm}
 \FPmul\dtuposter@tmp{  30}{\dtuposter@sizeratio}
 \newlength{\bgmargintop}%
 \setlength{\bgmargintop}{\dtuposter@tmp mm}
+\stdout{background margin top: \dtuposter@tmp mm}
 %\FPmul\dtuposter@tmp{20}{\dtuposter@sizeratio}
 %\newlength{\bgheight}%
 %\setlength{\bgheight}{\dtuposter@tmp pt * 0}
@@ -126,16 +140,20 @@
 \FPmul\dtuposter@tmp{ 120}{\dtuposter@sizeratio}
 \newlength{\bgfirstline}%
 \setlength{\bgfirstline}{\dtuposter@tmp mm}
+\stdout{background first line: \dtuposter@tmp mm}
 \FPmul\dtuposter@tmp{1080}{\dtuposter@sizeratio}
 \newlength{\bgsecondline}%
 \setlength{\bgsecondline}{\dtuposter@tmp mm}
+\stdout{background second line: \dtuposter@tmp mm}
 \FPmul\dtuposter@tmp{   5}{\dtuposter@sizeratio}
 \newlength{\bglinewidth}%
 \setlength{\bglinewidth}{\dtuposter@tmp pt}
+\stdout{background line width: \dtuposter@tmp pt}
 %
 \FPmul\dtuposter@tmp{  40}{\dtuposter@sizeratio}
 \newlength{\textmarginleftright}%
 \setlength{\textmarginleftright}{\dtuposter@tmp mm}
+\stdout{tex margin side: \dtuposter@tmp mm}
 \FPmul\dtuposter@tmp{ 150}{\dtuposter@sizeratio}
 \newlength{\textmargintop}%
 \setlength{\textmargintop}{\dtuposter@tmp mm}
@@ -222,12 +240,15 @@
 %======================================================================
 %===  Default font size, enlarge the font size for less than 3 columns
 \ifequal{\dtuposter@colcount}{3columns}{
+  \stdout{colcount switch: detected 3columns}
   \FPset\dtuposter@columncount{3}
   \FPset\dtuposter@fontsizefactor{1}}{
 		\ifequal{\dtuposter@colcount}{2columns}{
+		  \stdout{colcount switch: detected 2columns}
 		  \FPset\dtuposter@columncount{2}
 		  \FPdiv\dtuposter@fontsizefactor{48}{35}}{
 				\ifequal{\dtuposter@colcount}{1column}{
+				  \stdout{colcount switch: detected 1column}
 				  \FPset\dtuposter@columncount{1}
 				  \FPdiv\dtuposter@fontsizefactor{48}{35}}{
 				    \ClassError{dtuposter}{
@@ -244,6 +265,7 @@
 \newlength\dtuposter@tmpfontsize
 \newlength\dtuposter@tmplinespace
 \newcommand{\dtuposter@fs}[3]{ %
+  \stdout{Setting font size: {#1} {#2} {#3}}
   \FPmul\dtuposter@tmp{\dtuposter@sizeratio}{#1} %
   \FPmul\dtuposter@tmp{\dtuposter@tmp}{#3} %
   \setlength{\dtuposter@tmpfontsize}{\dtuposter@tmp pt} %
@@ -262,6 +284,7 @@
   \setkomafont{caption}{     \normalfont\dtuposter@fs{ 15}{ 24}{1}\bfseries} % table and figure caption
   \setkomafont{captionlabel}{\usekomafont{caption}\color{\highlight}}              % label looks the same
 }
+\AtBeginDocument{\dtuposter@setfonts} 
 %
 %
 %======================================================================
@@ -286,13 +309,14 @@
   \PassOptionsToClass{draft=false}{scrartcl}%
 
 \fi
+\AtEndDocument{\dtuposter@drawgrid} 
 %
 %
 %======================================================================
 %===  Use tikz to draw the background 
 \newcommand{\dtuposter@drawbg}{ %
   \begin{tikzpicture}[remember picture,overlay] %
-    %\begin{pgfonlayer}{background}
+    \begin{pgfonlayer}{background}
 	    % set base node as marker
 	    \node [inner sep=0pt,above right] at (current page.north west){ %
 	      \begin{tikzpicture}[remember picture,overlay]
@@ -308,9 +332,10 @@
 		      \draw (4\textmarginleftright+3\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtuposter@botlogo}};
 	      \end{tikzpicture} %
 	    }; %
-    %\end{pgfonlayer} %
+    \end{pgfonlayer} %
   \end{tikzpicture} %
 }%
+\AtBeginDocument{\dtuposter@drawbg}
 %
 %
 %======================================================================
@@ -322,7 +347,8 @@
 %
 \FPmul\dtuposter@tmp{\dtuposter@sizeratio}{35}
 \FPmul\dtuposter@basefontsize{\dtuposter@tmp}{\dtuposter@fontsizefactor}
-\PassOptionsToClass{fontsize=\dtuposter@basefontsize pt}{scrartcl}
+\PassOptionsToClass{fontsize=\expandafter\dtuposter@basefontsize pt}{scrartcl}
+\stdout{Loading scrartcl with \dtuposter@basefontsize pt}
 %
 %
 %======================================================================
@@ -332,10 +358,6 @@
 \setlength\parindent{0pt}
 \RequirePackage{geometry}
 \RequirePackage{crop}%
-%
-\AtBeginDocument{\dtuposter@setfonts} 
-\AtBeginDocument{\dtuposter@drawbg}
-\AtEndDocument{\dtuposter@drawgrid} 
 %
 %
 %======================================
@@ -377,7 +399,7 @@
   % must have a trim box,
   %\pdfpageattr{%/MediaBox [0 0 693.36000 594.00000]
   %/TrimBox [0.00000 9.00000 684.36000 585.00000]}
-  \pdfminorversion=3
+  \pdfminorversion=5
   \pdfcatalog{
   /OutputIntents [ <<
   /Info (none)
