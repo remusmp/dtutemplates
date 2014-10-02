@@ -1,11 +1,17 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{dtuposter}[2014/09/30 v1.0 - package to create posters]
+%======================================================================
+%===  dtuposter - a class to make posters tha comply with the DTU CI
+%
+% Written and maintained in 2011-2014 
+% by Jorrit Wronski (jowr@mek.dtu.dk)
 %
 %
 %======================================================================
 %===  Setting up the class and defining the options
 \RequirePackage{trace}
-\newcommand\stdout[1]{\ClassWarningNoLine{dtuposter}{#1}}
+\newcommand\stdout[1]{\ClassInfo{dtuposter}{#1}}
+%\newcommand\stdout[1]{\ClassWarningNoLine{dtuposter}{#1}}
 %
 % Standard options that you should pass to the class, use only kvoptions 
 % to avoid problems.
@@ -21,6 +27,8 @@
 \DeclareStringOption[tex_dtu_elektro_b_uk]{botlogo}   % default bottom logo
 \DeclareStringOption[a0paper]{papersize}              % default paper size
 \DeclareStringOption[3columns]{colcount}              % default number of columns
+\DeclareBoolOption[false]{longtitle}
+\DeclareBoolOption[false]{largecaption}
 \DeclareBoolOption[false]{draft}
 \DeclareComplementaryOption{final}{draft}
 \DeclareBoolOption[true]{crop}
@@ -124,7 +132,7 @@
 %
 %======================================================================
 %===  Define margins according to "DTU_Poster_A0_HOEJ_2sp.Skabelon.cs2"
-\newcommand{\dtuposter@setpapersize}{
+%\newcommand{\dtuposter@setpapersize}{
 \FPmul\dtuposter@tmp{  20}{\dtuposter@sizeratio}
 \newlength{\bgmarginleftright}%
 \setlength{\bgmarginleftright}{\dtuposter@tmp mm}
@@ -154,17 +162,20 @@
 \FPmul\dtuposter@tmp{  40}{\dtuposter@sizeratio}
 \newlength{\textmarginleftright}%
 \setlength{\textmarginleftright}{\dtuposter@tmp mm}
-\stdout{tex margin side: \dtuposter@tmp mm}
+\stdout{text margin side: \dtuposter@tmp mm}
 \FPmul\dtuposter@tmp{ 150}{\dtuposter@sizeratio}
 \newlength{\textmargintop}%
 \setlength{\textmargintop}{\dtuposter@tmp mm}
+\stdout{text margin top: \dtuposter@tmp mm}
 \FPmul\dtuposter@tmp{ 130}{\dtuposter@sizeratio}
 \newlength{\textmarginbottom}%
 \setlength{\textmarginbottom}{\dtuposter@tmp mm}
+\stdout{text margin bottom: \dtuposter@tmp mm}
 %
 \FPmul\dtuposter@tmp{20}{\dtuposter@sizeratio}
 \newlength{\textintercolumn}%
 \setlength{\textintercolumn}{\dtuposter@tmp mm} % The design guide says 10, but that is really small
+\stdout{intercolumn space: \dtuposter@tmp mm}
 %
 \newlength{\toplogoleft}%
 \setlength{\toplogoleft}{\textmarginleftright} 
@@ -209,7 +220,7 @@
   top=\textmargintop,%
   bottom=\textmarginbottom,%
   nohead}{geometry}
-}
+%}
 %
 %
 %======================================================================
@@ -219,7 +230,7 @@
 \providecommand{\dtuposter@setcropsize}{}
 %
 \ifdtuposter@crop%
-  \renewcommand{\dtuposter@setcropsize}{
+%  \renewcommand{\dtuposter@setcropsize}{
   \FPdiv\dtuposter@camwidth{\dtuposterwidth}{\dtuposter@mmpt} % back to mm
   \FPadd\dtuposter@camwidth{\dtuposter@camwidth}{30}%
   \FPdiv\dtuposter@camheight{\dtuposterheight}{\dtuposter@mmpt} % back to mm
@@ -235,7 +246,7 @@
   \FPsub\dtuposter@tmp{\dtuposter@tmp}{\dtuposterheight}%
   \FPdiv\dtuposter@tmp{\dtuposter@tmp}{2}%
   \setlength{\croptopbottom}{\dtuposter@tmp pt}%
-  }
+%  }
 \else%
  \setlength{\cropleftright}{0pt}%
  \setlength{\croptopbottom}{0pt}%
@@ -263,6 +274,8 @@
 				}
 		}
 }
+\stdout{columncount: \dtuposter@columncount}
+\stdout{fontsize factor: \dtuposter@fontsizefactor}
 %
 %
 %======================================================================
@@ -281,13 +294,22 @@
 }
 %
 \newcommand\dtuposter@setfonts{
-  \setkomafont{title}{       \normalfont\dtuposter@fs{160}{170}{1}\bfseries\color{\dtuposter@highlight}} % used with title
+  \ifdtuposter@longtitle%
+    \setkomafont{title}{       \normalfont\dtuposter@fs{100}{120}{1}\bfseries\color{\dtuposter@highlight}} % used with title
+  \else
+    \setkomafont{title}{       \normalfont\dtuposter@fs{160}{170}{1}\bfseries\color{\dtuposter@highlight}} % used with title
+  \fi
   \setkomafont{minisec}{     \normalfont\dtuposter@fs{ 60}{ 70}{1}\bfseries} % used for authors
   \setkomafont{dictum}{      \normalfont\dtuposter@fs{ 48}{ 60}{1}} % used for affiliation
   \setkomafont{section}{     \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries\color{\dtuposter@highlight}} % section
   \setkomafont{subsection}{  \normalfont\dtuposter@fs{ 35}{ 45}{\dtuposter@fontsizefactor}\bfseries} % subsection
-  \setkomafont{caption}{     \normalfont\dtuposter@fs{ 15}{ 24}{1}\bfseries} % table and figure caption
-  \setkomafont{captionlabel}{\usekomafont{caption}\color{\highlight}}              % label looks the same
+  \ifdtuposter@largecaption%
+    \setkomafont{caption}{     \normalfont\dtuposter@fs{ 24}{ 34}{1}} % table and figure caption
+  \else
+    \setkomafont{caption}{     \normalfont\dtuposter@fs{ 15}{ 24}{1}\bfseries} % table and figure caption
+  \fi
+  % Dirty hack to center the caption \hspace*{-3.5em}
+  \setkomafont{captionlabel}{\color{\dtuposter@highlight}\bfseries}              % label looks the same
 }
 %
 %
@@ -360,9 +382,9 @@
 \LoadClass{scrartcl}
 \pagestyle{empty}
 \setlength\parindent{0pt}
-\dtuposter@setpapersize
+%\dtuposter@setpapersize
 \RequirePackage{geometry}
-\dtuposter@setcropsize
+%\dtuposter@setcropsize
 \RequirePackage{crop}%
 %
 \AtBeginDocument{\dtuposter@drawbg}
@@ -469,7 +491,7 @@
 %======================================================================
 %===  Additional new or redefined commands and environments
 \newenvironment{fadebox}%
-  {\begin{lrbox}{\@tempboxa}\begin{minipage}{\linewidth}} %
+  {\begin{lrbox}{\@tempboxa}\begin{minipage}{0.975\linewidth}} %
   {\end{minipage}\end{lrbox} % box created, now load the rest
     \begin{tikzpicture} %
       %\begin{pgfonlayer}{background} %
@@ -481,12 +503,15 @@
     \end{tikzpicture} %\par
   } %
 %
+%
+%\RequirePackage{caption}
+%
 \renewenvironment{table} %
-  { \par \def\@captype{table}} %
-  { \par } %
+  { \par \noindent \def\@captype{table} \begin{center} \begin{minipage}{0.9\linewidth} \begin{center} } %
+  { \end{center} \end{minipage} \end{center} \par } %
 %
 \renewenvironment{figure} %
-  { \par \def\@captype{figure} \begin{center} \begin{minipage}{.9\linewidth} \begin{center} } %
+  { \par \noindent \def\@captype{figure} \begin{center} \begin{minipage}{0.9\linewidth} \begin{center} } %
   { \end{center} \end{minipage} \end{center} \par } %
 %
 %
