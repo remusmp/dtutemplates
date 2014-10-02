@@ -7,6 +7,7 @@
 
 \RequirePackage{etoolbox}
 \RequirePackage{datetime}
+\RequirePackage{keyval}
 
 % Enlarge slide size
 \geometry{paperwidth=140mm,paperheight=105mm}
@@ -41,7 +42,7 @@
 \newcommand{\dimDTULogoHeight}{0.0777\paperheight} % Percent
 \newcommand{\dimDTULogoYOffset}{0.0404\paperheight} % Percent
 \newcommand{\dimDTULogoXOffset}{0.9176\paperwidth} % Percent
-\newcommand{\dimDTUWhiteLogoXOffset}{0.717\paperwidth} % Percent
+\newcommand{\dimDTUWhiteLogoXOffset}{0.708\paperwidth} % Percent
 
 \newcommand{\dimDTUDepLogoXOffset}{0.062\paperwidth} % Percent
 \newcommand{\dimDTUDepLogoHeight}{0.0897\paperheight} % Percent
@@ -76,26 +77,27 @@
 %\newcommand{\insertdepartmentandinstitute}{\departmenttitle , \institutetitle}
 \newcommand{\insertdepartmentandinstitute}{\departmenttitle}
 \newcommand{\insertDTULogo}{\includegraphics[width=\dimDTULogoWidth]{tex_dtu_logo}}
-\newcommand{\insertDTUWhiteTitleLogo}{}
+\newcommand{\insertDTUWhiteLogo}{}
 \newcommand{\inserttitlefootline}{}
 \newcommand{\inserttitleheadline}{}
 \newcommand{\institutetitle}{}
 
 % Internal variable to check if \titlepage was called: false by default
 \def\bInTitle{false}
+\def\bDTUWhiteFrame{false}
 
 % Process language
 % Is it DK or UK?
 \ifdefstring{\inLanguage}{danish}
 {
 	\renewcommand{\institutetitle}{Danmarks Tekniske Universitet}
-	\renewcommand{\insertDTUWhiteTitleLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_dk_a1_neg}}
+	\renewcommand{\insertDTUWhiteLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_dk_a1_neg}}
 }
 {
 	\ifdefstring{\inLanguage}{english}
 	{
 		\renewcommand{\institutetitle}{Technical University of Denmark}
-		\renewcommand{\insertDTUWhiteTitleLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_uk_a1_neg}}
+		\renewcommand{\insertDTUWhiteLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_uk_a1_neg}}
 	}
 	{
 		% Undefined language
@@ -136,6 +138,17 @@
 		\end{beamercolorbox}
 	}
 }
+\newcommand{\insertFrameDTUWhiteLogo}
+{
+	\vspace{\dimDTULogoYOffset}
+	\hbox{
+		% The DTU white logo
+		\begin{beamercolorbox}[wd=0.99\paperwidth,left]{logo in head/foot}
+			\hspace{\dimDTUWhiteLogoXOffset}\insertDTUWhiteLogo
+		\end{beamercolorbox}
+	}
+}
+
 % Command used in title page for inserting the DTU logo in headline
 \newcommand{\insertTitleDTULogo}
 {
@@ -187,17 +200,41 @@
   {}
 \makeatother 
 
-% Customize blocks
-\setbeamertemplate{blocks}[rounded][shadow=true]
-\setbeamercolor{block title}{fg=white,bg=dtured}
-\setbeamerfont{block title}{series=\bfseries\small}
-\setbeamercolor{block body}{fg=black,bg=white}
-
 
 % Date format
 \newcommand{\DTUDateFormat}{\DTUDate}
 \newdateformat{DTUDate}{\THEDAY.\THEMONTH.\THEYEAR}
 
+% Customize blocks
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block title}{fg=white,bg=dtured}
+\setbeamerfont{block title}{series=\bfseries\small}
+\setbeamercolor{block body}{fg=black,bg=white}
+	
+\newcommand{\defaultDTUFrameStyle}{
+	\setbeamertemplate{background}{}
+	\color{black}
+}
+
+% White DTU frame
+\makeatletter
+\define@key{beamerframe}{dtuwhitelogo}[true]{%
+	\global\def\bDTUWhiteFrame{true}
+	\color{white}
+}
+\define@key{beamerframe}{bgfilename}{%
+	\setbeamertemplate{background}{
+		\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{#1}
+	}
+}
+% Default framestyle
+\pretocmd{\beamer@@@@frame}
+{
+	\global\def\bDTUWhiteFrame{false}
+	\defaultDTUFrameStyle
+}
+{}{}
+\makeatother
 
 \mode
 <all>
