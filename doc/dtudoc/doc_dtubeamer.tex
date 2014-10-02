@@ -231,16 +231,43 @@
 	\end{itemize}        
 }
 
+%================================================
+%===  Define the contact details
+\newcommand\contactTable{ %
+  \begin{tabular}{lr}
+    \multicolumn{2}{l}{Your Name} \\ 
+    \multicolumn{2}{l}{\LaTeX\ Support Group, Technical University of Denmark (DTU)} \\ \midrule
+    Building 308, Room 119    & latex-support@student.dtu.dk. \\
+    2800 Kgs. Lyngby, Denmark & +45 4525 phone \\
+    http://www.latex.dtu.dk   & +45 4525 fax
+  \end{tabular}
+}%
+%
 \frame[dtuwhitelogo, bgfilename=dtu_bg_fiber]{
-	Jorrit, add here the address box code!
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[fill=black, fill opacity=0.9, 
+          text=white, text opacity=1.0,
+          rounded corners=5pt, 
+          font=\scriptsize] at (current page.center) {\contactTable};
+  \end{tikzpicture}
 }
 
 \frame[dtuwhitelogo, bgfilename=dtu_bg_nano]{
-	Jorrit, add here the address box code!
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[fill=black, fill opacity=0.9, 
+          text=white, text opacity=1.0,
+          rounded corners=5pt, 
+          font=\scriptsize] at (current page.center) {\contactTable};
+  \end{tikzpicture}
 }
 
 \frame[dtuwhitelogo, bgfilename=dtu_bg_pink]{
-	Jorrit, add here the address box code!
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[fill=white, fill opacity=0.8, 
+          text=black, text opacity=1.0,
+          rounded corners=5pt, 
+          font=\scriptsize] at (current page.center) {\contactTable};
+  \end{tikzpicture}
 }
 
 \frame{
