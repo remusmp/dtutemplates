@@ -6,10 +6,12 @@
 \mode<presentation>
 
 \RequirePackage{etoolbox}
+\RequirePackage{xpatch}
 \RequirePackage{datetime}
 \RequirePackage{keyval}
+\RequirePackage{calc}
 
-% Enlarge slide size
+% Enlarge slide size (default)
 \geometry{paperwidth=140mm,paperheight=105mm}
 
 % Extra package
@@ -234,6 +236,19 @@
 	\defaultDTUFrameStyle
 }
 {}{}
+\makeatother
+
+% Lengths for footer
+\newlength{\widthframenumber}
+\newlength{\widthdepartment}
+\newlength{\widthtitle}
+\newlength{\widthdate}
+
+% Short title for the footer
+\makeatletter
+\newcommand\insertshorttitleinfooter{%
+	\beamer@shorttitle%
+}
 \makeatother
 
 \mode
