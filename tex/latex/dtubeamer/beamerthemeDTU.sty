@@ -6,13 +6,12 @@
 \mode<presentation>
 
 \RequirePackage{etoolbox}
-\RequirePackage{xpatch}
 \RequirePackage{datetime}
 \RequirePackage{keyval}
 \RequirePackage{calc}
 
 % Enlarge slide size (default)
-\geometry{paperwidth=140mm,paperheight=105mm}
+\geometry{paperwidth=140mm, paperheight=105mm}
 
 % Extra package
 \InputIfFileExists{departments}%
@@ -62,14 +61,15 @@
 \newcommand{\dimInstituteOffset}{0.027\paperheight}
 
 \newcommand{\dimFootlineYOffset}{0.0355\paperheight}
-\newcommand{\dimFootlineXOffset}{0.061\paperwidth}
 
 \newcommand{\dimLeftMarginI}{0.02\paperwidth}
 \newcommand{\dimTextLeftMargin}{0.0669\paperwidth} % Percent
 
 \newcommand{\dimPlaceTitleInHeader}{-0.09\paperheight}
 
-
+\makeatletter
+\setbeamersize{text margin left=\dimTextLeftMargin, text margin right=\dimTextLeftMargin}
+\makeatother
 
 % % % % % % % % % % % %
 % End of Dimensions
@@ -120,7 +120,8 @@
 \newcommand{\departmenttitle}{\thedepartmentNameText}
 % Command for inserting the department logo
 \newcommand{\insertdepartmentlogoA}{%
-	\ifdefempty{\@departmentLogo}{
+	\ifdefstring{\inDepartmentShortName}{admin}
+	{
 	}
 	{
 		\includegraphics[height=\dimDTUDepLogoHeight]{\thedepartmentLogo}
@@ -212,7 +213,8 @@
 \setbeamercolor{block title}{fg=white,bg=dtured}
 \setbeamerfont{block title}{series=\bfseries\small}
 \setbeamercolor{block body}{fg=black,bg=white}
-	
+
+
 \newcommand{\defaultDTUFrameStyle}{
 	\setbeamertemplate{background}{}
 	\color{black}
