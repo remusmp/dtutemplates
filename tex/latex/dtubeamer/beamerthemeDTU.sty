@@ -185,7 +185,7 @@
 
 % Table of contents
 \setbeamertemplate{section in toc}{%
-	{\color{dtured}$\bullet$}  \inserttocsection \par}
+	\color{dtured}$\bullet$  \inserttocsection \par}
 
 \setbeamertemplate{subsection in toc}{
 	\hskip1em{\color{dtured}$\bullet$} \inserttocsubsection \par}
@@ -252,6 +252,9 @@
 	\beamer@shorttitle%
 }
 \makeatother
+
+% Description list
+\setbeamercolor{description item}{fg=dtured}
 
 \mode
 <all>
