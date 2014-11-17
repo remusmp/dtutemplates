@@ -54,29 +54,18 @@
 		\ifdefstring{\bDTUWhiteFrame}{true}
 		{
 		}
-		{
-			\hbox{%
-				% The frame counter
-				\hspace{\dimFootlineXOffset}
-				\begin{beamercolorbox}[wd=0.041\paperwidth, left]{framecounter in head/foot}%
-					\usebeamerfont{framecounter in head/foot}\insertframenumber{}
-				\end{beamercolorbox}%
-				 
-				% The department and the university
-				\begin{beamercolorbox}[wd=.45\paperwidth, left]{department in head/foot}%
-					\usebeamerfont{department in head/foot}\insertdepartmentandinstitute
-				\end{beamercolorbox}%
-				
-				% The title of the presentation
-				\begin{beamercolorbox}[wd=.245\paperwidth, right]{title in head/foot}%
-					\usebeamerfont{title in head/foot}\insertshorttitle
-				\end{beamercolorbox}%
-				
-				% The current date
-				\begin{beamercolorbox}[wd=.113\paperwidth, right]{date in head/foot}%
-					\usebeamerfont{date in head/foot}\DTUDateFormat\insertdate
-				\end{beamercolorbox}%
-				\vspace{\dimFootlineYOffset}
+		{ %
+			\hbox{ %
+				\hspace{\dimTextLeftMargin}\hspace{-1.5pt}\thepage %
+				\setlength{\widthframenumber}{2em + \widthof{\insertframenumber}} %
+				\setlength{\widthdepartment}{1em + \widthof{\insertdepartmentandinstitute}} %
+				\setlength{\widthdate}{1em + \widthof{00 00 0000}} %
+				\setlength{\widthtitle}{\textwidth-\widthframenumber-\widthdepartment-\widthdate-\dimTextLeftMargin-\dimTextLeftMargin} %
+				%\parbox[t]{\widthframenumber}{\insertframenumber} %
+				\parbox[t]{\widthdepartment}{\insertdepartmentandinstitute} %
+				\parbox[t]{\widthtitle}{\raggedleft\insertshorttitleinfooter} %
+				\parbox[t]{\widthdate}{\raggedleft\DTUDateFormat\insertdate} %
+				\vspace{\dimFootlineYOffset} %
 			}
 		}
 	}

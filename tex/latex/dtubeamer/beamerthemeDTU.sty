@@ -8,9 +8,10 @@
 \RequirePackage{etoolbox}
 \RequirePackage{datetime}
 \RequirePackage{keyval}
+\RequirePackage{calc}
 
-% Enlarge slide size
-\geometry{paperwidth=140mm,paperheight=105mm}
+% Enlarge slide size (default)
+\geometry{paperwidth=140mm, paperheight=105mm}
 
 % Extra package
 \InputIfFileExists{departments}%
@@ -60,14 +61,15 @@
 \newcommand{\dimInstituteOffset}{0.027\paperheight}
 
 \newcommand{\dimFootlineYOffset}{0.0355\paperheight}
-\newcommand{\dimFootlineXOffset}{0.061\paperwidth}
 
 \newcommand{\dimLeftMarginI}{0.02\paperwidth}
 \newcommand{\dimTextLeftMargin}{0.0669\paperwidth} % Percent
 
 \newcommand{\dimPlaceTitleInHeader}{-0.09\paperheight}
 
-
+\makeatletter
+\setbeamersize{text margin left=\dimTextLeftMargin, text margin right=\dimTextLeftMargin}
+\makeatother
 
 % % % % % % % % % % % %
 % End of Dimensions
@@ -118,7 +120,8 @@
 \newcommand{\departmenttitle}{\thedepartmentNameText}
 % Command for inserting the department logo
 \newcommand{\insertdepartmentlogoA}{%
-	\ifdefempty{\@departmentLogo}{
+	\ifdefstring{\inDepartmentShortName}{admin}
+	{
 	}
 	{
 		\includegraphics[height=\dimDTUDepLogoHeight]{\thedepartmentLogo}
@@ -182,7 +185,7 @@
 
 % Table of contents
 \setbeamertemplate{section in toc}{%
-	{\color{dtured}$\bullet$}  \inserttocsection \par}
+	\color{dtured}$\bullet$  \inserttocsection \par}
 
 \setbeamertemplate{subsection in toc}{
 	\hskip1em{\color{dtured}$\bullet$} \inserttocsubsection \par}
@@ -210,7 +213,8 @@
 \setbeamercolor{block title}{fg=white,bg=dtured}
 \setbeamerfont{block title}{series=\bfseries\small}
 \setbeamercolor{block body}{fg=black,bg=white}
-	
+
+
 \newcommand{\defaultDTUFrameStyle}{
 	\setbeamertemplate{background}{}
 	\color{black}
@@ -235,6 +239,22 @@
 }
 {}{}
 \makeatother
+
+% Lengths for footer
+\newlength{\widthframenumber}
+\newlength{\widthdepartment}
+\newlength{\widthtitle}
+\newlength{\widthdate}
+
+% Short title for the footer
+\makeatletter
+\newcommand\insertshorttitleinfooter{%
+	\beamer@shorttitle%
+}
+\makeatother
+
+% Description list
+\setbeamercolor{description item}{fg=dtured}
 
 \mode
 <all>

@@ -1,10 +1,10 @@
-\documentclass{beamer}
+\documentclass[aspectratio=43]{beamer}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.9}
+\pgfplotsset{compat=newest}
 \usepackage{booktabs}
 \usepackage{siunitx}
 
@@ -19,11 +19,10 @@
 
 \usetheme[department=elektro]{DTU}
 
-\title{DTU Beamer Template}
+\title[DTU Templates]{DTU Beamer Template}
 \author{Remus M. Prunescu}
 \institute{\LaTeX\ Support Group, Technical University of Denmark (DTU)}
 \date{\today}
-
 	
 \newcommand{\tabitem}{{\color{dtured}$\bullet$} }
 
@@ -242,7 +241,7 @@
     http://www.latex.dtu.dk   & +45 4525 fax
   \end{tabular}
 }%
-%
+
 \frame[dtuwhitelogo, bgfilename=dtu_bg_fiber]{
   \begin{tikzpicture}[remember picture,overlay]
     \node[fill=black, fill opacity=0.9, 
@@ -278,11 +277,20 @@
 	\end{center}
 }
 
-\frame{
-	\frametitle[allowframebreaks]{Release History}
-	\begin{block}{v1.04}
+\frame[allowframebreaks]{
+	\frametitle{Release History}
+	\begin{block}{v1.11}
+		\begin{itemize}
+			\item Long titles are displayed correctly in the footer;
+		\end{itemize}
+	\end{block}
+	\begin{block}{v1.1}
 		\begin{itemize}
 			\item Fonts options;
+			\item Poster template;
+			\item Frame backgrounds;
+			\item Black frames with white logo;
+			\item Address boxes.
 		\end{itemize}
 	\end{block}
 	\begin{block}{v1.03}
@@ -302,5 +310,4 @@
 		\end{itemize}
 	\end{block}
 }
-
 \end{document}
