@@ -1,0 +1,697 @@
+\NeedsTeXFormat{LaTeX2e}
+%======================================================================
+%===  dtucover - a collection of commands to create coverpages
+%
+% Written and maintained in 2011-2014 
+% by Jorrit Wronski (jowr@mek.dtu.dk)
+%
+% The dimensions are taken from DTU's recommendations for an A4
+% cover page and all lengths are scaled according to the actual
+% paper size. 
+%
+\ProvidesPackage{dtucover}
+%
+%======================================================================
+%===  Define functions to be called according to the options
+\RequirePackage{trace}
+\newcommand\stdout[1]{\PackageInfo{dtucover}{#1}}
+%\newcommand\stdout[1]{\PackageWarningNoLine{dtucover}{#1}}
+\InputIfFileExists{dtucolours}{
+  \PackageInfo{dtucover}{Successfully loaded the DTU colours.}
+}{
+  \PackageWarningNoLine{dtucover}{Could not load the colours from dtucolours.sty. This compilation is likely to fail.}
+}%
+%
+\RequirePackage{kvoptions}
+%
+%\DeclareStringOption[This is the Poster Title]{title} % default title
+%\DeclareStringOption[This Ismyname]{author}           % default author
+%\DeclareStringOption[Subject of the Poster]{subject}  % default subject
+%\DeclareStringOption[poster, DTU, LaTex]{keywords}    % default keywords
+\DeclareStringOption[dtulightblue]{bgcolor}           % default colour
+\DeclareStringOption[dtuorange]{licolor}              % default colour
+\DeclareStringOption[tex_dtu_mek_frise]{frise}        % default institute frise
+\DeclareStringOption[tex_dtu_mekanik_a_uk]{botlogo}   % default bottom logo
+%\DeclareStringOption[a0paper]{papersize}              % default paper size
+%\DeclareStringOption[3columns]{colcount}              % default number of columns
+%
+\ProcessKeyvalOptions{dtucover}\relax
+%
+%\providecommand{\dtucover@bgcolor}{dtulightblue}
+%\providecommand{\dtucover@licolor}{dtuorange}
+%
+%\RequirePackage{etoolbox,trace}
+%\long\def\ifequal#1#2#3#4{\expandafter\ifstrequal\expandafter{#1}{#2}{#3}{#4}}
+%
+%
+%======================================================================
+%===  Default paper and font sizes
+\RequirePackage{calc,fp,tikz}
+\usetikzlibrary{shapes,calc,positioning,backgrounds,shadings}
+%
+%% Convert mm to pt
+\FPset{\dtucover@mmpt}{2.84}
+\FPdiv{\dtucover@ptmm}{1}{\dtucover@mmpt}
+%
+\newcommand{\dtucover@getmm}[1]{\strip@pt\dimexpr\dtucover@ptmm\dimexpr#1\relax\relax}
+\newcommand{\dtucover@getpt}[1]{\strip@pt\dimexpr1.0\dimexpr#1\relax\relax}
+%
+%
+%======================================================================
+%===  Set the lengths 
+\newcommand{\dtucover@setlengths}{
+  \FPmul{\dtucover@refwidth}{\dtucover@mmpt}{210}
+  \FPmul{\dtucover@refheight}{\dtucover@mmpt}{297}
+  \FPdiv\dtucover@widthratio{\dtucover@getpt{\paperwidth}}{\dtucover@refwidth}
+  \FPdiv\dtucover@heightratio{\dtucover@getpt{\paperheight}}{\dtucover@refheight}
+%
+  \FPmul\dtucover@tmp{ 12}{\dtucover@widthratio}
+  \newlength{\dtucover@logoright}
+  \setlength{\dtucover@logoright}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{   15}{\dtucover@heightratio}
+  \newlength{\dtucover@logotop}
+  \setlength{\dtucover@logotop}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{  17}{\dtucover@widthratio}
+  \newlength{\dtucover@logoleft}
+  \setlength{\dtucover@logoleft}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{10}{\dtucover@heightratio}
+  \newlength{\dtucover@logobottom}
+  \setlength{\dtucover@logobottom}{\dtucover@tmp mm}
+%
+  \FPmul\dtucover@tmp{   5}{\dtucover@widthratio}
+  \newlength{\dtucover@tilesouter}
+  \setlength{\dtucover@tilesouter}{\dtucover@tmp mm}
+  %\FPmul\dtucover@tmp{    15}{\dtucover@heightratio}
+  %\newlength{\dtucover@tilestop}
+  %\setlength{\dtucover@tilestop}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{  12}{\dtucover@widthratio}
+  \newlength{\dtucover@tilesinner}
+  \setlength{\dtucover@tilesinner}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{  5}{\dtucover@heightratio}
+  \newlength{\dtucover@tilesbottom}
+  \setlength{\dtucover@tilesbottom}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{96.5}{\dtucover@widthratio}
+  \newlength{\dtucover@tileswidth}
+  \setlength{\dtucover@tileswidth}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{100}{\dtucover@heightratio} 
+  \newlength{\dtucover@tilesheight}
+  \setlength{\dtucover@tilesheight}{\dtucover@tmp mm}
+%
+  \FPmul\dtucover@tmp{4}{\dtucover@heightratio} 
+  \newlength{\dtucover@lineheight}
+  \setlength{\dtucover@lineheight}{\dtucover@tmp pt}
+%
+%
+%======================================================================
+%===  The font size and lineskip for titles and other text
+  % Do not change the font size!
+  \FPset\dtucover@fontratio{1}%{\dtucover@heightratio} 
+  %
+  \FPmul\dtucover@tmp{22}{\dtucover@fontratio} 
+  \newlength{\dtucover@titletext}
+  \setlength{\dtucover@titletext}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{28}{\dtucover@fontratio} 
+  \newlength{\dtucover@titlespace}
+  \setlength{\dtucover@titlespace}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{22}{\dtucover@fontratio} 
+  \newlength{\dtucover@subtitletext}
+  \setlength{\dtucover@subtitletext}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{28}{\dtucover@fontratio} 
+  \newlength{\dtucover@subtitlespace}
+  \setlength{\dtucover@subtitlespace}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{34}{\dtucover@fontratio} 
+  \newlength{\dtucover@seriestext}
+  \setlength{\dtucover@seriestext}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{40}{\dtucover@fontratio} 
+  \newlength{\dtucover@seriesspace}
+  \setlength{\dtucover@seriesspace}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{10}{\dtucover@fontratio} 
+  \newlength{\dtucover@authortext}
+  \setlength{\dtucover@authortext}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{13}{\dtucover@fontratio} 
+  \newlength{\dtucover@authorspace}
+  \setlength{\dtucover@authorspace}{\dtucover@tmp pt}
+}
+% ... and call the new function 
+\dtucover@setlengths %
+%
+%
+%======================================================================
+%===  change the background for drafting
+\newcommand\dtucover@drawgrid{%
+  \begin{tikzpicture}[remember picture,overlay] %
+  %\begin{pgfonlayer}{foreground}
+    \node [inner sep=0pt,above right] at (current page.north west){ %
+      \begin{tikzpicture}[remember picture,overlay] %
+	\draw[step=1cm,color=magenta!25] (0,0) grid (\paperwidth,-\paperheight); %
+      \end{tikzpicture} %
+    }; %
+  %\end{pgfonlayer}
+  \end{tikzpicture} %
+} % 
+%
+%
+%======================================================================
+%===  Use tikz to draw the background 
+\RequirePackage{xifthen}% provides \ifthenelse and \isempty
+\RequirePackage{xparse}
+%
+\DeclareDocumentCommand{\dtucover@drawbg}{ O{\dtucover@botlogo} }{
+  \ifthenelse{\isempty{#1}}{ %
+    %TODO: automatically detect the department
+    \newcommand\dtucover@deplogo{\dtucover@botlogo} %
+  }{ 
+    \newcommand\dtucover@deplogo{#1} %
+  }
+  \begin{tikzpicture}[remember picture,overlay] %
+    \begin{pgfonlayer}{background} %
+      \node [inner sep=0pt,above right] at (current page.north west){ %
+        \begin{tikzpicture}[remember picture,overlay] %
+          \draw (\paperwidth-\dtucover@logoright, -\dtucover@logotop) node[inner sep=0pt, below left] {\includegraphics[width=\dtucover@logoright]{tex_dtu_logo}}; %
+          \draw (\dtucover@logoleft, -\paperheight+\dtucover@logobottom) node[inner sep=0pt, above right] {\includegraphics[height=\dtucover@logoright]{\dtucover@deplogo}}; %
+          % These are the three tiles ...
+          %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+0\dtucover@tilesheight); %
+          %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          % ... and this is the line on top
+          \filldraw[inner sep=0pt,color=\dtucover@licolor]    (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
+        \end{tikzpicture} }; %
+    \end{pgfonlayer} %
+  \end{tikzpicture} %
+}%
+%
+\RequirePackage{adjustbox}
+\DeclareDocumentCommand{\dtucoverThreeTiles}{ O{} O{} }{
+  \dtucover@drawbg[#1]
+  \begin{tikzpicture}[remember picture,overlay] %
+    \begin{pgfonlayer}{background}%
+      \node [inner sep=0pt,above right] at (current page.north west){ %
+        \begin{tikzpicture}[remember picture,overlay]%
+          % These are the three tiles ...
+          \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+0\dtucover@tilesheight); %
+         %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          \ifthenelse{\isempty{#2}}{
+          %TODO: automatically detect the department
+          \newcommand\dtucover@defpic{\dtucover@frise}
+          %\node[inner sep=0pt, left                      ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.5\dtucover@tilesheight) {\includegraphics[height=0.9\dtucover@tilesheight,clip,trim=0mm 14mm 138.5mm 0mm]{\dtucover@defpic}}; %
+          \node[inner sep=0pt, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\adjincludegraphics[height=0.833\dtucover@tilesheight,clip,trim={0 {.115\height} {.393\width} 0}]{\dtucover@defpic}}; %
+          }{
+          \node[inner sep=0pt, left                      ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.5\dtucover@tilesheight) {\includegraphics[height=0.9\dtucover@tilesheight]{#2}}; %
+          }
+        \end{tikzpicture} }; %
+    \end{pgfonlayer} %
+  \end{tikzpicture} %
+  %\dtucover@drawgrid %
+}%
+%
+\DeclareDocumentCommand{\dtucovertitletext}{ O{ } m m m }{
+  %
+  \tikzstyle{coverNode}    = [ node distance = 0.75em and 0.0em, inner sep = 0.0em, text width = \paperwidth-\dtucover@logoleft-\dtucover@tilesouter]
+  \tikzstyle{titleNode}    = [ coverNode, font=\sffamily\fontsize{\dtucover@titletext   }{\dtucover@titlespace   }\selectfont \bfseries ]
+  \tikzstyle{subtitleNode} = [ coverNode, font=\sffamily\fontsize{\dtucover@subtitletext}{\dtucover@subtitlespace}\selectfont ]
+  \tikzstyle{seriesNode}   = [ coverNode, font=\sffamily\fontsize{\dtucover@seriestext  }{\dtucover@seriesspace  }\selectfont \bfseries 
+                                        , text width = 0.9\dtucover@tilesheight, rotate=90 ]
+  \tikzstyle{authorNode}   = [ coverNode, font=\rmfamily\fontsize{\dtucover@authortext  }{\dtucover@authorspace  }\selectfont  
+                                        , text width = 0.8\dtucover@tileswidth ]
+  %
+  \begin{tikzpicture}[remember picture,overlay] %
+    \begin{pgfonlayer}{background}%
+      \node [inner sep=0pt,above right] at (current page.north west){ %
+        \begin{tikzpicture}[remember picture,overlay]%
+          % Here is the title node     
+          %\sbox0{#1}%
+          %\ifdim\wd0=0pt
+          %  \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#2} ;
+          %\else
+          %  \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#1} ;
+          %  \node [   titleNode,above right=of sub.north west] (tit)                                                                                               {#2} ;
+          %\fi
+          \ifthenelse{\isempty{#1}}{
+            \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#2} ;
+          }{
+            \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#1} ;
+            \node [   titleNode,above right=of sub.north west] (tit)                                                                                               {#2} ;
+          }%
+          \node   [  seriesNode,below right]        (ser) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight+1\dtucover@tilesbottom){#3} ;
+          \node   [  authorNode,below right]        (aut) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight-1\dtucover@tilesbottom){#4} ;
+        \end{tikzpicture} }; %
+    \end{pgfonlayer} %
+  \end{tikzpicture} %
+}%
+%
+% \newcommand{\dtucover@drawbg}{ %
+%   \begin{tikzpicture}[remember picture,overlay] %
+%     \begin{pgfonlayer}{background}%
+% 	    % set base node as marker
+% 	    \node [inner sep=0pt,above right] at (current page.north west){ %
+% 	      \begin{tikzpicture}[remember picture,overlay]%
+% 		      \draw (\toplogoleft,-\toplogotop) node[inner sep=0pt, below right] {\includegraphics[height=\toplogoheight]{\dtucover@toplogo}}; %
+% 		      \draw (\paperwidth-\dtulogoright,-\dtulogotop) node[inner sep=0pt, below left] {\includegraphics[width=\dtulogowidth]{tex_dtu_logo}}; %
+% 		      \filldraw[inner sep=0pt,color=\dtucover@bgcolor!10] (\bgmarginleftright,-\bgfirstline-\bglinewidth) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline); %
+% 		      \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\bgmarginleftright,-\bgfirstline) rectangle (\paperwidth-\bgmarginleftright,-\bgfirstline-\bglinewidth); %
+% 		      \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\bgmarginleftright,-\bgsecondline) rectangle (\paperwidth-\bgmarginleftright,-\bgsecondline-\bglinewidth); %
+% 		      %
+% 		      \draw (1\textmarginleftright+0\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtucover@botlogo}}; %
+% 		      \draw (2\textmarginleftright+1\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtucover@botlogo}}; %
+% 		      \draw (3\textmarginleftright+2\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtucover@botlogo}}; %
+% 		      \draw (4\textmarginleftright+3\footerimagewidth,-\footerimagetop) node[inner sep=0pt, below right] {\includegraphics[width=\footerimagewidth]{\dtucover@botlogo}}; %
+% 	      \end{tikzpicture} %
+% 	    }; %
+%     \end{pgfonlayer} %
+%   \end{tikzpicture} %
+% }%
+%
+%
+%Farvet felt / foto / mønster
+%måler 96,5 x 100 mm.
+%Placeres
+%X = 12 mm Y = 92 mm,
+%X = 108,5 mm Y = 92 mm og
+%X = 192 mm Y = 108,5 mm
+%fra øverste venstre hjørne.
+%
+%
+%
+%
+%
+% %======================================================================
+% %===  The first version, 4 fields on the cover
+% \newcommand{\coverpagev1}{
+%   
+% 
+% 
+% %\newcommand{\dtucover@setpapersize}{
+% \FPmul\dtucover@tmp{  20}{\dtucover@sizeratio}
+% \newlength{\bgmarginleftright}%
+% \setlength{\bgmarginleftright}{\dtucover@tmp mm}
+% \stdout{background margin side: \dtucover@tmp mm}
+% \FPmul\dtucover@tmp{  30}{\dtucover@sizeratio}
+% \newlength{\bgmargintop}%
+% \setlength{\bgmargintop}{\dtucover@tmp mm}
+% \stdout{background margin top: \dtucover@tmp mm}
+% %\FPmul\dtucover@tmp{20}{\dtucover@sizeratio}
+% %\newlength{\bgheight}%
+% %\setlength{\bgheight}{\dtucover@tmp pt * 0}
+% %\addtolength{\bgheight}{\paperheight}
+% %
+% \FPmul\dtucover@tmp{ 120}{\dtucover@sizeratio}
+% \newlength{\bgfirstline}%
+% \setlength{\bgfirstline}{\dtucover@tmp mm}
+% \stdout{background first line: \dtucover@tmp mm}
+% \FPmul\dtucover@tmp{1080}{\dtucover@sizeratio}
+% \newlength{\bgsecondline}%
+% \setlength{\bgsecondline}{\dtucover@tmp mm}
+% \stdout{background second line: \dtucover@tmp mm}
+% \FPmul\dtucover@tmp{   5}{\dtucover@sizeratio}
+% \newlength{\bglinewidth}%
+% \setlength{\bglinewidth}{\dtucover@tmp pt}
+% \stdout{background line width: \dtucover@tmp pt}
+% %
+% \FPmul\dtucover@tmp{  40}{\dtucover@sizeratio}
+% \newlength{\textmarginleftright}%
+% \setlength{\textmarginleftright}{\dtucover@tmp mm}
+% \stdout{text margin side: \dtucover@tmp mm}
+% \FPmul\dtucover@tmp{ 150}{\dtucover@sizeratio}
+% \newlength{\textmargintop}%
+% \setlength{\textmargintop}{\dtucover@tmp mm}
+% \stdout{text margin top: \dtucover@tmp mm}
+% \FPmul\dtucover@tmp{ 130}{\dtucover@sizeratio}
+% \newlength{\textmarginbottom}%
+% \setlength{\textmarginbottom}{\dtucover@tmp mm}
+% \stdout{text margin bottom: \dtucover@tmp mm}
+% %
+% \FPmul\dtucover@tmp{20}{\dtucover@sizeratio}
+% \newlength{\textintercolumn}%
+% \setlength{\textintercolumn}{\dtucover@tmp mm} % The design guide says 10, but that is really small
+% \stdout{intercolumn space: \dtucover@tmp mm}
+% %
+% \newlength{\toplogoleft}%
+% \setlength{\toplogoleft}{\textmarginleftright} 
+% \FPmul\dtucover@tmp{50}{\dtucover@sizeratio}
+% \newlength{\toplogotop}%
+% \setlength{\toplogotop}{\dtucover@tmp mm} 
+% \FPmul\dtucover@tmp{43.25}{\dtucover@sizeratio}
+% \newlength{\toplogoheight}%
+% \setlength{\toplogoheight}{\dtucover@tmp mm} 
+% %
+% \newlength{\dtulogoright}%
+% \setlength{\dtulogoright}{\textmarginleftright} 
+% \FPmul\dtucover@tmp{30}{\dtucover@sizeratio}
+% \newlength{\dtulogotop}%
+% \setlength{\dtulogotop}{\dtucover@tmp mm} 
+% \FPmul\dtucover@tmp{44.5}{\dtucover@sizeratio}
+% \newlength{\dtulogowidth}%
+% \setlength{\dtulogowidth}{\dtucover@tmp mm}
+% %
+% \FPmul\dtucover@tmp{1125}{\dtucover@sizeratio}
+% \newlength{\footerimagetop}%
+% \setlength{\footerimagetop}{\dtucover@tmp mm}
+% %\FPmul\dtucover@tmp{  40}{\dtucover@sizeratio}
+% %\newlength{\footerimageleft}%
+% %\setlength{\footerimageleft}{\dtucover@tmp mm}
+% %
+% \newlength{\footerimagewidth}%
+% \setlength{\footerimagewidth}{\dtucoverwidth pt}
+% \addtolength{\footerimagewidth}{-2\textmarginleftright} % left and right
+% \addtolength{\footerimagewidth}{-3\textmarginleftright} % in between the 4 images
+% \addtolength{\footerimagewidth}{-0.75\footerimagewidth} % 4 images => 1/4 of length
+% %
+% \PassOptionsToPackage{%
+%   centering,%
+%   pdftex,%
+%   paperwidth=\dtucoverwidth pt,%
+%   paperheight=\dtucoverheight pt,%
+%   bindingoffset=0.0pt,
+%   footskip=0.0in,
+%   left=\textmarginleftright,%
+%   right=\textmarginleftright,%
+%   top=\textmargintop,%
+%   bottom=\textmarginbottom,%
+%   nohead}{geometry}
+% %}
+% %
+% %
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% % Stolen procedure from the beamer package...
+% % Default values for options
+% \newcommand{\inDepartmentShortName}{elektro}
+% \newcommand{\inLanguage}{english}
+% \newcommand{\inShowSection}{true}
+% %
+% % Check language
+% \@ifpackagewith{babel}{danish}{%
+% 	\renewcommand{\inLanguage}{danish}%
+% }{}
+% %
+% %
+% %\NeedsTeXFormat{LaTeX2e}
+% %\newif\ifenglish
+% %\DeclareOption{english}{\global\englishtrue}
+% %\DeclareOption{danish}{\global\englishfalse}
+% %\ProcessOptions\relax
+% 
+% %\newcommand{\bs}{$\backslash$}
+% %\newcommand{\comdes}[1]{\texttt{\bs{}#
+% \RequirePackage{url}
+% \RequirePackage{hyperref}
+% 
+% \RequirePackage{xcolor}
+% 
+% \InputIfFileExists{dtucolours}%
+% 	{
+% 	%loaded the file
+% 	 }%
+% 	{
+% 	%could not load the file
+% 	}%
+% 
+% % These colours seem to be different. 
+% %\definecolor{dtuorange}{RGB}{233,93,15}
+% %\definecolor{dtulightblue}{RGB}{132,208,240}
+% 
+% %\usepackage[a4, center, cam]{crop}
+% \RequirePackage{calc}
+% \RequirePackage[absolute,overlay]{textpos}
+% \RequirePackage{tabularx}
+% \RequirePackage{multirow}
+% 
+% \RequirePackage{graphicx}
+% \RequirePackage{tikz}
+% \usetikzlibrary{shapes,calc,positioning}
+
+% % Provide a command to contruct a table from 
+% % given lines, nothing is printed if the 
+% % second argument is empty.
+% \RequirePackage{xifthen}
+
+
+% 
+% 
+% 
+% % \RequirePackage{trimspaces}
+% % %\newcommand{\isempty}[1]{\@ifmtarg{#1}{TRUE}{FALSE}}
+% % 
+% % \RequirePackage{xparse}
+% % \NewDocumentCommand\printtablerow{mm}{%
+% %   \ifthenelse{\isempty{\trim@spaces{#2}}}{%then
+% %      only &  \\ % do nothing
+% %     }{%else
+% %       #1 & #2 \\ 
+% %     }
+% % }
+% 
+% % \newcommand{\printtablerow}[2]{%
+% %   \@ifmtarg{ #2 }{%
+% %     TRUE }{
+% %     FALSE}}
+% 
+% % \NewDocumentCommand\printtablerow{mm}{%
+% %   \@ifmtarg{#2}{%then
+% %     test % do nothing
+% %     }{%else
+% %       %{#1} & {#2} \\ %
+% %     }
+% % }
+% 
+% 
+% \makeatletter
+% 
+% \newcommand{\@ReportNumber}{\@empty}
+% \def\ReportNumber#1{\gdef\@ReportNumber{#1}}
+% %\newcommand{\@subtitle}{.}
+% %\def\subtitle#1{\gdef\@subtitle{#1}}
+% \newcommand{\@ISBN}{\@empty}
+% \def\ISBN#1{\gdef\@ISBN{ISBN #1\\}}
+% \newcommand{\@ReportMonth}{}
+% \def\ReportMonth#1{\gdef\@ReportMonth{#1}}
+% \newcommand{\@ReportYear}{}
+% \def\ReportYear#1{\gdef\@ReportYear{#1}}
+% \newcommand{\@ReportType}{}
+% \def\ReportType#1{\gdef\@ReportType{#1}}
+% % New things from the DTU report template
+% \newcommand{\@TitleDTU}{\multicolumn{2}{@{}l}{\DTUinfoTitle {\@title}} }
+% \def\TitleDTU#1{\gdef\@TitleDTU{\multicolumn{2}{@{}l}{\DTUinfoTitle {#1}} }}
+% \newcommand{\@SubtitleDTU}{\multicolumn{2}{@{}l}{ {\@subtitle}} }
+% \def\SubtitleDTU#1{\gdef\@SubtitleDTU{\multicolumn{2}{@{}l}{{#1}}}}
+% \newcommand{\@ReportDTU}{\multicolumn{2}{@{}l}{{Report number: \@ReportNumber}} }
+% \def\ReportDTU#1{\gdef\@ReportDTU{\multicolumn{2}{@{}l}{Report number: {#1}} }}
+% \newcommand{\@YearDTU}{\multicolumn{2}{@{}l}{ {\@ReportYear}} }
+% \def\YearDTU#1{\gdef\@YearDTU{\multicolumn{2}{@{}l}{ {#1}} }}
+% \newcommand{\@AuthorDTU}{%
+%   \multicolumn{2}{@{}l}{ By} \\ %
+%   \multicolumn{2}{@{}l}{ \@author} }
+% \def\AuthorDTU#1{\gdef\@AuthorDTU{%
+%   \multicolumn{2}{@{}l}{ By} \\ %
+%   \multicolumn{2}{@{}l}{ #1} }}
+% % copyright label and text
+% \newcommand{\@Copyright}{\@empty}
+% \def\Copyright#1{\gdef\@Copyright{ Copyright: &  {#1} }}
+% % coverpicture label and text
+% \newcommand{\@Coverpicture}{\@empty}
+% \def\Coverpicture#1{\gdef\@Coverpicture{ Cover picture: &  {#1} }}
+% % Publisher information
+% \newcommand{\@Publisher}{\@empty}
+% \def\Publisher#1#2#3{\gdef\@Publisher{%
+%    Published by: &  {#1} \\ %
+%                  &  {#2} \\ %
+%                  &  {#3} }}
+% % Request report from 
+% \newcommand{\@Request}{\@empty}
+% \def\Request#1{\gdef\@Request{%
+%  Request copy & \multirow{2}{*}{ {#1}} \\ %
+%  from:        &  } }
+% % electronic ISSN and ISBN
+% \newcommand{\@ISSNe}{\@empty}
+% \def\ISSNe#1{\gdef\@ISSNe{ ISSN: &  {#1} (electronic version) }}
+% \newcommand{\@ISBNe}{\@empty}
+% \def\ISBNe#1{\gdef\@ISBNe{ ISBN: &  {#1} (electronic version) }}
+% % print ISSN and ISBN
+% \newcommand{\@ISSNp}{\@empty}
+% \def\ISSNp#1{\gdef\@ISSNp{ ISSN: &  {#1} (printed version) }}
+% \newcommand{\@ISBNp}{{ISBN: &  {\@ISBN} (printed version) }}
+% \def\ISBNp#1{\gdef\@ISBNp{ISBN: &  {#1} (printed version) }}
+% 
+% 
+% %\makeatother
+% 
+% 
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Define fonts according to "DTU_Rapportomslag_guide_80pct", slight differences
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Visit these pages for more information on font commands:
+% % http://mirrors.dotsrc.org/ctan/info/latex2e-help-texinfo/latex2e.html#Typefaces
+% % http://www.cl.cam.ac.uk/~rf10/pstex/latexcommands.htm
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Use a times clone and arial in case the default fonts for 
+% % the cover pages are undefined.
+% \providecommand{\sfdefaultcover}{ua1}
+% \providecommand{\rmdefaultcover}{ptm}
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\sfbf}{\usefont{\encodingdefault}{\sfdefaultcover}{\bfdefault}{\shapedefault}} % bold, sans-serif
+% \newcommand{\sfmd}{\usefont{\encodingdefault}{\sfdefaultcover}{\mddefault}{\shapedefault}} % normal, sans-serif
+% \newcommand{\rmbf}{\usefont{\encodingdefault}{\rmdefaultcover}{\bfdefault}{\shapedefault}} % bold, roman
+% \newcommand{\rmmd}{\usefont{\encodingdefault}{\rmdefaultcover}{\mddefault}{\shapedefault}} % normal, roman
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Increase line spacing for all sizes
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newlength{\myFS}
+% \newcommand{\coverSize}[1]{%
+% \setlength{\myFS}{#1}%
+% \fontsize{\myFS}{1.4\myFS}\selectfont%
+% }
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\DTUauthorfont}{\rmmd\coverSize{10pt}}
+% \newcommand{\DTUtitlefont}{\sfbf\coverSize{20pt}}
+% \newcommand{\DTUsubtitlefont}{\sfmd\coverSize{20pt}}
+% \newcommand{\DTUtypefont}{\sfbf\coverSize{28pt}}
+% \newcommand{\DTUdepartmentfont}{\sfbf\coverSize{7pt}}
+% \newcommand{\DTUaddressfont}{\sfmd\coverSize{7pt}}
+% %
+% \newcommand{\DTUinfoTitle}{\sfbf\coverSize{9pt}}
+% \newcommand{\DTUinfoText}{\rmmd\coverSize{9pt}}
+% 
+% 
+% \newcommand{\makefrontpage}
+% {
+% % \begin{textblock*}{hsize}[ho,vo](hpos,vpos)
+% % text...
+% % \end{textblock*}
+% % produces a textblock of the given size, where this 
+% % time hsize, hpos and vpos are absolute dimensions, 
+% % but ho and vo are pure-number offsets (that is, 
+% % fractions of the width and height of the textblock), as above.
+% %  \begin{textblock*}{\paperwidth-10mm}[0,0](0mm,12mm)
+% %    \flushright \includegraphics[width=12mm]{tex_dtu_logo}
+% %  \end{textblock*}
+% %
+%  \thispagestyle{empty}
+%  \begingroup  ~~ 
+%   % This block is designed to stay above the orange line. 
+%   % It is raised automatically according to the number 
+%   % of lines in it. The design specifications are met if
+%   % there aro not more than three lines.
+%   \begin{textblock*}{\paperwidth-14mm-10mm}[0,1](14mm,68mm)
+%     \noindent 
+% 	\DTUtitlefont \@title{} \\
+% 	\DTUsubtitlefont \@subtitle{}
+%   \end{textblock*}
+% 
+%   \begin{textblock*}{\paperwidth}[0,0](0mm,0mm)
+%     \noindent
+%     \tikz{
+%       % just a marker
+%       \filldraw[inner sep=0pt,color=white] (0mm,0mm) rectangle +(0.1mm,-0.1mm); 
+%       % DTU logo
+%       \draw (\paperwidth-10mm,-12mm) node[inner sep=0pt, below left] {\includegraphics[width=12mm]{tex_dtu_logo}}; 
+%       % blue rect top left
+%       \filldraw[inner sep=0pt,color=dtulightblue] (10mm,-73mm) rectangle +(77.5mm,-81mm); 
+%       % orange bar on top
+%       \filldraw[inner sep=0pt,color=dtuorange] (10mm,-73mm) rectangle +(155mm,3.2pt); 
+%       % blue rect bot right
+%       \filldraw[inner sep=0pt,color=dtulightblue] (87.5mm,-73mm-81mm)rectangle +(77.5mm,-81mm); 
+%       % kind of thesis or report
+%       \draw (10mm,-73mm-82mm) node[inner sep=4mm, rotate=90, below right] {\DTUtypefont\@ReportType}; 
+%       % import frise and cut it 
+%       \draw (\paperwidth-5mm,-73mm-81mm) node[inner sep=0pt,above left]{\includegraphics[height=67.4mm,clip,trim=0mm 14mm 138.5mm 0mm]{tex_dtu_mek_frise}};
+%       % logo and department 
+%       \draw (14mm,-\paperheight+10mm) node[inner sep=0pt, above right] {\includegraphics[height=12mm]{tex_dtu_mekanik_a_uk}}; 
+%     }
+%   \end{textblock*}
+% 
+%   \begin{textblock*}{77.5mm-4mm-4mm}[0,0](14mm,73mm+81mm+5mm) 
+%     \noindent
+%     \DTUauthorfont \@author{}\\ \@ReportNumber{} \\ \@ReportMonth{} \@ReportYear{}
+%   \end{textblock*}
+%   \endgroup
+%   \clearpage
+% }
+% 
+% \newcommand{\makesecondpage}
+% {
+%   \thispagestyle{empty}
+%   ~~
+%   \vfill 
+%   \noindent
+%   \newlength{\curSkipDTU}
+%   \setlength{\curSkipDTU}{3mm}
+%   {
+%   \DTUinfoText 
+%   \begin{tabularx}{\textwidth}{@{}l@{ }X}
+%     \@TitleDTU \\ 
+%     \@SubtitleDTU \\[\curSkipDTU]
+%     \@ReportDTU \\
+%     \@YearDTU \\[\curSkipDTU]
+%     \@AuthorDTU \\[\curSkipDTU]
+%     % copyright label and text
+%     \@Copyright \\
+%     % coverpicture label and text
+%     \@Coverpicture \\
+%     % Publisher information
+%     \@Publisher \\
+%     % Request report from 
+%     \@Request \\[\curSkipDTU]
+%     % electronic ISSN and ISBN
+%     \@ISSNe \\
+%     \@ISBNe \\[\curSkipDTU]
+%     % print ISSN and ISBN
+%     \@ISSNp\\
+%     \@ISBNp 
+%   \end{tabularx}
+%   }
+%   \cleardoublepage
+% }
+% 
+% \newcommand{\makebackpage}
+% { 
+%   \cleardoublepage \thispagestyle{empty} ~~ \par
+%   \newpage         \thispagestyle{empty}
+%   \begingroup
+%   \begin{textblock*}{\paperwidth}[0,0](0mm,0mm)
+%     \noindent
+%     \tikz{
+%       % just a marker
+%       \filldraw[inner sep=0pt,color=white] (0mm,0mm) rectangle +(0.1mm,-0.1mm); 
+%       % orange bar on top
+%       \filldraw[inner sep=0pt,color=dtuorange] (5mm,-73mm) rectangle +(155mm,3.2pt); 
+%       % blue rect top 
+%       \filldraw[inner sep=0pt,color=dtulightblue] (5mm,-73mm) rectangle (\paperwidth-10mm,-\paperheight+5mm); 
+%     }
+%   \end{textblock*}
+% %
+%   \begin{textblock*}{60mm}[0,0](14mm,186mm)
+%     \noindent \DTUdepartmentfont 
+%     DTU Mechanical Engineering \\
+%     Section of Thermal Energy Systems \\
+%     \DTUaddressfont 
+%     Technical University of Denmark \\ \\
+%     Nils Koppels Allé, Bld. 403 \\
+%     DK-2800 Kgs. Lyngby \\
+%     Denmark \\
+%     Phone (+45) 45 25 41 31 \\
+%     Fax  (+45) 45 88 43 25 \\ \\
+%     \href{http://www.mek.dtu.dk}{www.mek.dtu.dk}
+%   \end{textblock*}
+%   \cleardoublepage
+%   \endgroup
+% }
+% 
+
