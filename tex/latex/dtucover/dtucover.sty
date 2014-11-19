@@ -101,6 +101,18 @@
   \newlength{\dtucover@lineheight}
   \setlength{\dtucover@lineheight}{\dtucover@tmp pt}
 %
+  \FPmul\dtucover@tmp{130}{\dtucover@widthratio} 
+  \newlength{\dtucover@backtextwidth}
+  \setlength{\dtucover@backtextwidth}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{25}{\dtucover@heightratio} 
+  \newlength{\dtucover@backtexttoptop}
+  \setlength{\dtucover@backtexttoptop}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{15}{\dtucover@widthratio} 
+  \newlength{\dtucover@backtextleft}
+  \setlength{\dtucover@backtextleft}{\dtucover@tmp mm}
+  \FPmul\dtucover@tmp{230}{\dtucover@heightratio} 
+  \newlength{\dtucover@backtexttop}
+  \setlength{\dtucover@backtexttop}{\dtucover@tmp mm}
 %
 %======================================================================
 %===  The font size and lineskip for titles and other text
@@ -131,6 +143,19 @@
   \FPmul\dtucover@tmp{13}{\dtucover@fontratio} 
   \newlength{\dtucover@authorspace}
   \setlength{\dtucover@authorspace}{\dtucover@tmp pt}
+%
+  \FPmul\dtucover@tmp{9}{\dtucover@fontratio} 
+  \newlength{\dtucover@backtoptext}
+  \setlength{\dtucover@backtoptext}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{11}{\dtucover@fontratio} 
+  \newlength{\dtucover@backtopspace}
+  \setlength{\dtucover@backtopspace}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{7}{\dtucover@fontratio} 
+  \newlength{\dtucover@backlefttext}
+  \setlength{\dtucover@backlefttext}{\dtucover@tmp pt}
+  \FPmul\dtucover@tmp{11}{\dtucover@fontratio} 
+  \newlength{\dtucover@backleftspace}
+  \setlength{\dtucover@backleftspace}{\dtucover@tmp pt}
 }
 % ... and call the new function 
 \dtucover@setlengths %
@@ -219,22 +244,63 @@
     \begin{pgfonlayer}{background}%
       \node [inner sep=0pt,above right] at (current page.north west){ %
         \begin{tikzpicture}[remember picture,overlay]%
-          % Here is the title node     
-          %\sbox0{#1}%
-          %\ifdim\wd0=0pt
-          %  \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#2} ;
-          %\else
-          %  \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#1} ;
-          %  \node [   titleNode,above right=of sub.north west] (tit)                                                                                               {#2} ;
-          %\fi
-          \ifthenelse{\isempty{#1}}{
+          % Here is the title node
+          %\setbox0=\hbox{#1}
+          %\ifdim\wd0<1pt
+          %%\sbox{boxName}{#1}%
+          %%\ifdim\wd{boxName}=0pt
+          %\ifx&#1&
+          %\if\relax\detokenize{#1}\relax
+          \if #1 \@empty
             \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#2} ;
-          }{
+          \else
             \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#1} ;
             \node [   titleNode,above right=of sub.north west] (tit)                                                                                               {#2} ;
-          }%
+          \fi
+          %\ifthenelse{\ifstrempty{#1}}{%
+          %\ifthenelse{\isempty{#1}}{%
+          %\ifthenelse{\equal{#1}{}}{%
+          %  \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#2} ;
+          %}{
+          %  \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#1} ;
+          %  \node [   titleNode,above right=of sub.north west] (tit)                                                                                               {#2} ;
+          %}%
           \node   [  seriesNode,below right]        (ser) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight+1\dtucover@tilesbottom){#3} ;
           \node   [  authorNode,below right]        (aut) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight-1\dtucover@tilesbottom){#4} ;
+        \end{tikzpicture} }; %
+    \end{pgfonlayer} %
+  \end{tikzpicture} %
+}%
+%
+\DeclareDocumentCommand{\dtucover@drawback}{ }{
+  \begin{tikzpicture}[remember picture,overlay] %
+    \begin{pgfonlayer}{background} %
+      \node [inner sep=0pt,above right] at (current page.north west){ %
+        \begin{tikzpicture}[remember picture,overlay] %
+          % This is the coloured patch ...
+          \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\dtucover@tilesouter,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesinner,-\paperheight+\dtucover@tilesbottom); %
+          % ... and this is the line on top
+          \filldraw[inner sep=0pt,color=\dtucover@licolor]    (\dtucover@tilesouter,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesinner,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
+        \end{tikzpicture} }; %
+    \end{pgfonlayer} %
+  \end{tikzpicture} %
+}%
+%
+\DeclareDocumentCommand{\dtucoverbackmatter}{ m O{ } O{ } }{
+  \dtucover@drawback
+  %
+  \tikzstyle{backNode}  = [ node distance = 0.0em and 0.75em, inner sep = 0.0em, text width = \dtucover@backtextwidth]
+  \tikzstyle{topNode}   = [ backNode, font=\sffamily\fontsize{\dtucover@backtoptext }{\dtucover@backtopspace }\selectfont ]
+  \tikzstyle{leftNode}  = [ backNode, font=\sffamily\fontsize{\dtucover@backlefttext}{\dtucover@backleftspace}\selectfont , text width = 0.5\dtucover@backtextwidth]
+  \tikzstyle{rightNode} = [ leftNode ]
+  %
+  \begin{tikzpicture}[remember picture,overlay] %
+    \begin{pgfonlayer}{background}%
+      \node [inner sep=0pt,above right] at (current page.north west){ %
+        \begin{tikzpicture}[remember picture,overlay]%
+          \node   [   topNode,below right] (top) at (\dtucover@backtextleft                        ,-\dtucover@backtexttoptop) {#1} ;
+          \node   [  leftNode,below right] (lef) at (\dtucover@backtextleft                        ,-\dtucover@backtexttop)    {#2} ;
+          \node   [ rightNode,below right] (rig) at (\dtucover@backtextleft+1.0\dtucover@tileswidth,-\dtucover@backtexttop)    {#3} ;
         \end{tikzpicture} }; %
     \end{pgfonlayer} %
   \end{tikzpicture} %
