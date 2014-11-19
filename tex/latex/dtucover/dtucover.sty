@@ -13,35 +13,59 @@
 %
 %======================================================================
 %===  Define functions to be called according to the options
+\RequirePackage{ifxetex}
+\ifxetex
+  \RequirePackage{etoolbox}
+\else
+  %\RequirePdfTeX
+  \RequirePackage{etoolbox}
+  \providecommand{\strcmp}{\pdfstrcmp}
+\fi
 \RequirePackage{trace}
 \newcommand\stdout[1]{\PackageInfo{dtucover}{#1}}
 %\newcommand\stdout[1]{\PackageWarningNoLine{dtucover}{#1}}
-\InputIfFileExists{dtucolours}{
-  \PackageInfo{dtucover}{Successfully loaded the DTU colours.}
-}{
-  \PackageWarningNoLine{dtucover}{Could not load the colours from dtucolours.sty. This compilation is likely to fail.}
-}%
 %
 \RequirePackage{kvoptions}
 %
-%\DeclareStringOption[This is the Poster Title]{title} % default title
-%\DeclareStringOption[This Ismyname]{author}           % default author
-%\DeclareStringOption[Subject of the Poster]{subject}  % default subject
-%\DeclareStringOption[poster, DTU, LaTex]{keywords}    % default keywords
-\DeclareStringOption[dtulightblue]{bgcolor}           % default colour
-\DeclareStringOption[dtuorange]{licolor}              % default colour
-\DeclareStringOption[tex_dtu_mek_frise]{frise}        % default institute frise
-\DeclareStringOption[tex_dtu_mekanik_a_uk]{botlogo}   % default bottom logo
-%\DeclareStringOption[a0paper]{papersize}              % default paper size
-%\DeclareStringOption[3columns]{colcount}              % default number of columns
+\DeclareStringOption[admin]{department}     % default department
+\DeclareStringOption[dtulightblue]{bgcolor} % default tile colour
+\DeclareStringOption[dtuorange]{licolor}    % default line colour
 %
 \ProcessKeyvalOptions{dtucover}\relax
 %
-%\providecommand{\dtucover@bgcolor}{dtulightblue}
-%\providecommand{\dtucover@licolor}{dtuorange}
 %
-%\RequirePackage{etoolbox,trace}
-%\long\def\ifequal#1#2#3#4{\expandafter\ifstrequal\expandafter{#1}{#2}{#3}{#4}}
+%======================================================================
+%===  Department detection and colour loading
+% After processign the options, we can start using the values to 
+% generate more default parameters like logo etc and load the colours.
+\InputIfFileExists{dtucolours}%
+  {\stdout{Successfully loaded the DTU colours.}}%
+  {\PackageWarningNoLine{dtucover}{Could not load the colours from dtucolours.sty. This compilation is likely to fail.}}%
+%
+\InputIfFileExists{departments}%
+  {\stdout{The file departments.tex with department logo file naming has been loaded.}}%
+  {\PackageWarningNoLine{dtucover}{The file departments.tex is missing. Consult the manual.}}%
+%
+\RequirePackage{xifthen}% provides \ifthenelse and \isempty
+\RequirePackage{xparse}
+% Select language, use babel if language supported
+\ifthenelse{\equal{danish}{\languagename}\or\equal{english}{\languagename}}
+  {\def\lang{\languagename}}
+  {\def\lang{english}}
+%
+\ifnum\strcmp{\dtucover@department}{admin}=0
+  \def\dtucover@dtuname{~} % translated university name
+\else
+  \activateDepartmentInfo{\lang}{admin}%
+  \let\dtucover@dtuname\@departmentNameText % translated university name
+\fi
+\activateDepartmentInfo{\lang}{\dtucover@department} % activate the real department
+% Now we can use:
+% \thedepartmentNameLogo
+% \thedepartmentNameText
+% \thedepartmentLongNameText
+% \thedepartmentLogo
+% \thedepartmentFrise
 %
 %
 %======================================================================
@@ -178,28 +202,30 @@
 %
 %======================================================================
 %===  Use tikz to draw the background 
-\RequirePackage{xifthen}% provides \ifthenelse and \isempty
-\RequirePackage{xparse}
 %
-\DeclareDocumentCommand{\dtucover@drawbg}{ O{\dtucover@botlogo} }{
+\DeclareDocumentCommand{\dtucover@drawbg}{ O{ } }{
   \ifthenelse{\isempty{#1}}{ %
-    %TODO: automatically detect the department
-    \newcommand\dtucover@deplogo{\dtucover@botlogo} %
+    \IfFileExists{\thedepartmentLogo.pdf}
+      {\newcommand\dtucover@deplogo{\includegraphics[height=\dtucover@logoright]{\thedepartmentLogo}}}
+      {\IfFileExists{\thedepartmentLogo.eps}
+        {\newcommand\dtucover@deplogo{\includegraphics[height=\dtucover@logoright]{\thedepartmentLogo}}}
+        {\newcommand\dtucover@deplogo{~}}}
   }{ 
     \newcommand\dtucover@deplogo{#1} %
   }
+  \thispagestyle{empty}
   \begin{tikzpicture}[remember picture,overlay] %
     \begin{pgfonlayer}{background} %
       \node [inner sep=0pt,above right] at (current page.north west){ %
         \begin{tikzpicture}[remember picture,overlay] %
           \draw (\paperwidth-\dtucover@logoright, -\dtucover@logotop) node[inner sep=0pt, below left] {\includegraphics[width=\dtucover@logoright]{tex_dtu_logo}}; %
-          \draw (\dtucover@logoleft, -\paperheight+\dtucover@logobottom) node[inner sep=0pt, above right] {\includegraphics[height=\dtucover@logoright]{\dtucover@deplogo}}; %
+          \draw (\dtucover@logoleft, -\paperheight+\dtucover@logobottom) node[inner sep=0pt, above right] {\dtucover@deplogo}; %
           % These are the three tiles ...
           %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+0\dtucover@tilesheight); %
           %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
           %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
           % ... and this is the line on top
-          \filldraw[inner sep=0pt,color=\dtucover@licolor]    (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
+          \filldraw[inner sep=0pt,color=\dtucover@licolor]    (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+.4pt) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
         \end{tikzpicture} }; %
     \end{pgfonlayer} %
   \end{tikzpicture} %
@@ -217,10 +243,9 @@
          %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
           \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
           \ifthenelse{\isempty{#2}}{
-          %TODO: automatically detect the department
-          \newcommand\dtucover@defpic{\dtucover@frise}
-          %\node[inner sep=0pt, left                      ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.5\dtucover@tilesheight) {\includegraphics[height=0.9\dtucover@tilesheight,clip,trim=0mm 14mm 138.5mm 0mm]{\dtucover@defpic}}; %
-          \node[inner sep=0pt, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\adjincludegraphics[height=0.833\dtucover@tilesheight,clip,trim={0 {.115\height} {.393\width} 0}]{\dtucover@defpic}}; %
+          \newcommand\dtucover@defpic{\thedepartmentFrise}
+          \node[inner sep=0pt, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\includegraphics[height=0.833\dtucover@tilesheight,clip,trim=0mm 14mm 138.5mm 0mm]{\dtucover@defpic}}; %
+          %\node[inner sep=0pt, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\adjincludegraphics[height=0.833\dtucover@tilesheight,clip,trim={0 {.115\height} {.393\width} 0}]{\dtucover@defpic}}; %
           }{
           \node[inner sep=0pt, left                      ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.5\dtucover@tilesheight) {\includegraphics[height=0.9\dtucover@tilesheight]{#2}}; %
           }
@@ -230,7 +255,7 @@
   %\dtucover@drawgrid %
 }%
 %
-\DeclareDocumentCommand{\dtucovertitletext}{ O{ } m m m }{
+\DeclareDocumentCommand{\dtucoverTitleText}{ O{ } m m m }{
   %
   \tikzstyle{coverNode}    = [ node distance = 0.75em and 0.0em, inner sep = 0.0em, text width = \paperwidth-\dtucover@logoleft-\dtucover@tilesouter]
   \tikzstyle{titleNode}    = [ coverNode, font=\sffamily\fontsize{\dtucover@titletext   }{\dtucover@titlespace   }\selectfont \bfseries ]
@@ -240,6 +265,7 @@
   \tikzstyle{authorNode}   = [ coverNode, font=\rmfamily\fontsize{\dtucover@authortext  }{\dtucover@authorspace  }\selectfont  
                                         , text width = 0.8\dtucover@tileswidth ]
   %
+  \thispagestyle{empty}
   \begin{tikzpicture}[remember picture,overlay] %
     \begin{pgfonlayer}{background}%
       \node [inner sep=0pt,above right] at (current page.north west){ %
@@ -252,9 +278,9 @@
           %\ifx&#1&
           %\if\relax\detokenize{#1}\relax
           \if #1 \@empty
-            \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#2} ;
+            \node [   titleNode,above right]        (tit) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+3\dtucover@lineheight) {#2} ;
           \else
-            \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+4\dtucover@lineheight) {#1} ;
+            \node [subtitleNode,above right]        (sub) at (\dtucover@logoleft,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+3\dtucover@lineheight) {#1} ;
             \node [   titleNode,above right=of sub.north west] (tit)                                                                                               {#2} ;
           \fi
           %\ifthenelse{\ifstrempty{#1}}{%
@@ -273,6 +299,8 @@
 }%
 %
 \DeclareDocumentCommand{\dtucover@drawback}{ }{
+  \cleardoublepage
+  \thispagestyle{empty}
   \begin{tikzpicture}[remember picture,overlay] %
     \begin{pgfonlayer}{background} %
       \node [inner sep=0pt,above right] at (current page.north west){ %
@@ -286,20 +314,24 @@
   \end{tikzpicture} %
 }%
 %
-\DeclareDocumentCommand{\dtucoverbackmatter}{ m O{ } O{ } }{
-  \dtucover@drawback
+\DeclareDocumentCommand{\dtucoverBackMatter}{ O{ } O{ } O{ } }{
+  %
+  \newcommand\dtucover@deptext{\textbf{\thedepartmentNameText} \\ \textbf{\thedepartmentLongNameText} \\ \dtucover@dtuname \\ ~ \\ #1} %
   %
   \tikzstyle{backNode}  = [ node distance = 0.0em and 0.75em, inner sep = 0.0em, text width = \dtucover@backtextwidth]
   \tikzstyle{topNode}   = [ backNode, font=\sffamily\fontsize{\dtucover@backtoptext }{\dtucover@backtopspace }\selectfont ]
   \tikzstyle{leftNode}  = [ backNode, font=\sffamily\fontsize{\dtucover@backlefttext}{\dtucover@backleftspace}\selectfont , text width = 0.5\dtucover@backtextwidth]
   \tikzstyle{rightNode} = [ leftNode ]
   %
+  \cleardoublepage
+  \thispagestyle{empty}
+  \dtucover@drawback
   \begin{tikzpicture}[remember picture,overlay] %
     \begin{pgfonlayer}{background}%
       \node [inner sep=0pt,above right] at (current page.north west){ %
         \begin{tikzpicture}[remember picture,overlay]%
-          \node   [   topNode,below right] (top) at (\dtucover@backtextleft                        ,-\dtucover@backtexttoptop) {#1} ;
-          \node   [  leftNode,below right] (lef) at (\dtucover@backtextleft                        ,-\dtucover@backtexttop)    {#2} ;
+          \node   [   topNode,below right] (top) at (\dtucover@backtextleft                        ,-\dtucover@backtexttoptop) {#2} ;
+          \node   [  leftNode,below right] (lef) at (\dtucover@backtextleft                        ,-\dtucover@backtexttop)    {\dtucover@deptext} ;
           \node   [ rightNode,below right] (rig) at (\dtucover@backtextleft+1.0\dtucover@tileswidth,-\dtucover@backtexttop)    {#3} ;
         \end{tikzpicture} }; %
     \end{pgfonlayer} %
