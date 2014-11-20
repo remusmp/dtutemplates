@@ -1,18 +1,24 @@
-\documentclass[a4paper]{report}
+\documentclass[b5paper]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{verbatim,ifthen,xspace,blindtext,datetime}
-%
-\usepackage{array}
-\usepackage{longtable}
 
-\newcommand{\optempty}{{\rmfamily\texttt{empty}}}
-\newcommand*{\for}[1]{{\rmfamily(#1)}}
+%\RequirePackage{ifxetex}
+\ifxetex
+  \usepackage{fontspec}
+  \setmainfont[Ligatures=TeX,Scale=MatchUppercase]{TimesNewRomanPSMT}
+  \setsansfont[Ligatures=TeX,Scale=MatchUppercase]{Arial} 
+\else
+  \usepackage{mathptmx}
+  \usepackage[scaled]{uarial}
+\fi
+
 %
 \usepackage[%
-  department=mekanik,
-  bgcolor=dtulightgreen,
-  licolor=dtured%
+%  department=mekanik,    % select your department
+%  bgcolor=dtulightgreen, % the colour of the tiles
+%  licolor=dtured         % the colour of the line
   ]{dtucover}
 %
 \newcommand\addInfo{%
@@ -25,7 +31,7 @@ www.institut.dtu.dk %
 }
 
 \newcommand\addaddInfo{%
-\textbf{Partner Corporation} \\
+\textbf{Partner Corporation} \\ ~ \\
 Gadenavn 00 \\ %
 Evt. Post Box 000 \\ %
 0000 Bynavn \\ %
@@ -34,89 +40,107 @@ Fax 00000000 \\~ \\ %
 www.institut.dtu.dk %
 }
 
-
+% We start by drawing the cover page and putting test onto it
+\AtBeginDocument{
+  \dtucoverThreeTiles % make the title page background
+  \dtucoverTitleText %
+    [Description of the options and examples] % This is the subtitle
+    {The \texttt{dtucover} package} % This is the title
+    {Manual} % This is the report type
+    {Jorrit Wronski \\ DTU Mechanical Engineering \\ \monthname{} \the\year} % This is the author information
+  \clearpage
+}
+% ... and at the end, we need the back cover
+\AtEndDocument{
+  \clearpage
+  \dtucoverBackMatter[\addInfo][\blindtext][\addaddInfo]
+}
 
 \begin{document}
 
-\dtucoverThreeTiles[][tex_dtu_logo] % make the title page background
-\dtucoverTitleText[This report has a subtitle]{The Main Title of This Work}{Mag. Thesis}{Navn Navnesen \\ Special Report No. XXX \\ \monthname{} \the\year}
+\section{Introduction}
 
-\chapter{The DTUcover Package}
-The following table describes the options available. Please note that if you need to write a comma in the text for an option you need to enclose the text in curly braces, ie. \verb.author = {tps, als}..
+There are some recommendations from DTU regarding the design of cover pages and titles for reports. At DTU Mechanical Engineering, those are also used for 
+student theses and other material. Hence the need to include such pages in your own documents. This package implements only one of the recommended designs, 
+but more could be implemented if needed. The package uses both commands and package options to customise the appearance of cover and back page. 
 
-\begin{longtable}{>{\ttfamily}l >{\raggedright}p{0.4\textwidth} >{\ttfamily}p{0.2\textwidth}}
-\hline
-{\normalfont Option} & Description & {\normalfont Default Value}\\ \hline
-department 	& Specify the department. This selects the correct department logo and text. Possible values are: \verb|aqua|, \verb|byg|, \verb|compute|, \verb|elektro|, \verb|energikonvertering|, \verb|fotonik|, \verb|fysik|, \verb|food|, \verb|kemi|, \verb|kemiteknik|, \verb|management|, \verb|mekanik|, \verb|miljo|, \verb|nanotek|, \verb|space|, \verb|systembiologi|, \verb|transport|, \verb|veterinaerinstituttet|, \verb|vindenergi|. & admin\\
-bgcolor	& If you are printing on stationery paper you should specify this option (true, false) & dtulightblue, \textcolor{dtulightblue}{\rule{10pt}{10pt}} \\
-licolor	& If you are printing on stationery paper you should specify this option (true, false) & dtuorange, \textcolor{dtuorange}{\rule{10pt}{10pt}} \\
+\section{Package Options}
+Some basic settings can be made when the package gets loaded. The three available options are listed below together with some explanatory text.
+\begin{itemize}
+\item \texttt{department}  specifies the department or institute. It selects the correct department logo and text. Possible values are: \verb|admin|, \verb|aqua|, \verb|byg|, \verb|compute|, \verb|elektro|, \verb|energikonvertering|, \verb|fotonik|, \verb|fysik|, \verb|food|, \verb|kemi|, \verb|kemiteknik|, \verb|management|, \verb|mekanik|, \verb|miljo|, \verb|nanotek|, \verb|space|, \verb|systembiologi|, \verb|transport|, \verb|veterinaerinstituttet|, \verb|vindenergi|. The default value is \verb|admin|.
+\item \texttt{bgcolor} specifies the colour used for the tiles on the front cover page and the background of the back cover. You can use any colour name that has been defined in your document. Please have a look at \texttt{dtucolours.sty} for a list of DTU colours. The default value is \texttt{dtulightblue} \textcolor{dtulightblue}{\rule{10pt}{10pt}}.
+\item \texttt{licolor} is the colour of the lines on the front cover and the back cover. You can use any colour name that has been defined in your document. Please have a look at \texttt{dtucolours.sty} for a list of DTU colours. It defaults to \texttt{dtuorange} \textcolor{dtuorange}{\rule{10pt}{10pt}}.
+\end{itemize}
 
-\hline
-\end{longtable}
+\section{Package Commands}
 
-\AtEndDocument{\dtucoverBackMatter[\addInfo][\blindtext][\addaddInfo]}
+\begin{itemize}
+\item \texttt{\textbackslash dtucoverThreeTiles[depImage][covImage]} \\
+      This command draws the background with the horizontal line and the DTU logo. If available, it also puts the logo of the 
+      department in the bottom left corner of the frontpage. The first optional parameter \texttt{depImage} can be used to 
+      specify a custom image. On top of these elements, it draws the two almost quadratic tiles 
+      (you can change their colour with the \texttt{bgcolor} option). In the end, it puts an image on the right hand side using 
+      the department's "frise" by default. Customise this by using the second optional parameter \texttt{covImage}.
+\item \texttt{\textbackslash dtucoverTitleText[subtitle]\{title\}\{type\}\{author\}} \\
+      A command to add text to the cover background. It uses an optional parameter for the \texttt{subtitle} and 
+      requires you to provide \texttt{title}, \texttt{type} and \texttt{author} to specify the details of your report. Note that
+      the fields can contain line breaks.
+\item \texttt{\textbackslash dtucoverBackMatter[contact][backtext][addInfo]} \\ 
+      Draw the background for the back cover and add some text to it. It automatically adds the name of the institute and the 
+      university in the bottom left corner, but you can provide additional contact information with the optional \texttt{contact}
+      parameter. You can also add some closing text or a synopsis to the top of the page by using the \texttt{backtext} parameter.
+      In case you have a cooperation partner or organisation, you can specify a second contact block with \texttt{addInfo}. All 
+      three parameters can contain line breaks and other advanced \LaTeX{} commands.
+\end{itemize}
+
+\section{Examples}
+
+\begin{figure}
+\centering
+\includegraphics[width=.2\linewidth,page=1]{doc_dtucover_adm} %
+\includegraphics[width=.2\linewidth,page=3]{doc_dtucover_adm} %
+\quad %
+\includegraphics[width=.2\linewidth,page=1]{doc_dtucover_mek_col_img} %
+\includegraphics[width=.2\linewidth,page=3]{doc_dtucover_mek_col_img} %
+\caption{An example of the default settings and a customised cover}\label{fig:ex}
+\end{figure}
+
+The impact of the customisation options described above is illustrated in Fig.~\ref{fig:ex}. On the left hand side there is the 
+default cover page with the general DTU "frise" and the blue and orange colours, while the right hand side shows a cover with 
+custom colours and specific images for the Department of Mechanical Engineering. You could also add completely different pictures.
+
+The default example uses the command \texttt{\textbackslash usepackage\{dtucover\}} to load the package and the 
+second example was created with \texttt{\textbackslash usepackage[department=mekanik, bgcolor=dtulightgreen, licolor=dtured]\{dtucover\}}.  
+  
 
 
-%The DTU letter class is build on the extensive Memoir class by Peter Wilson. The class requires the following packages: placeins, xcolor, calc, graphicx, hyperref, and ifthen. The class uses several options to define the different values of the letter head and foot. All options are activated using the \verb,\dtuletterconfig, command in the preambel, e.g.:
-%
-%\begin{verbatim}
-%\dtuletterconfig{
-%lang = danish,
-%department = elektro} 
-%\end{verbatim}
-%
+
+%\AtBeginDocument{
+%  \dtucoverThreeTiles % make the title page background
+%  \dtucoverTitleText %
+%    [Description of the options and examples] % This is the subtitle
+%    {The \texttt{dtucover} package} % This is the title
+%    {Manual} % This is the report type
+%    {Jorrit Wronski \\ DTU Mechanical Engineering \\ \monthname{} \the\year} % This is the author information
+%}
+%% ... and at the end, we need the back cover
+%\AtEndDocument{
+%  \dtucoverBackMatter[\addInfo][\blindtext][\addaddInfo]
+%}
+
+
+%\chapter{The DTUcover Package}
 %The following table describes the options available. Please note that if you need to write a comma in the text for an option you need to enclose the text in curly braces, ie. \verb.author = {tps, als}..
 %
 %\begin{longtable}{>{\ttfamily}l >{\raggedright}p{0.4\textwidth} >{\ttfamily}p{0.2\textwidth}}
 %\hline
 %{\normalfont Option} & Description & {\normalfont Default Value}\\ \hline
-%lang 		& Sets the language for the letter (department name, footer field names, etc.). (danish, english) & danish\\
 %department 	& Specify the department. This selects the correct department logo and text. Possible values are: \verb|aqua|, \verb|byg|, \verb|compute|, \verb|elektro|, \verb|energikonvertering|, \verb|fotonik|, \verb|fysik|, \verb|food|, \verb|kemi|, \verb|kemiteknik|, \verb|management|, \verb|mekanik|, \verb|miljo|, \verb|nanotek|, \verb|space|, \verb|systembiologi|, \verb|transport|, \verb|veterinaerinstituttet|, \verb|vindenergi|. & admin\\
-%stationery	& If you are printing on stationery paper you should specify this option (true, false) & false\\
-%config 		& Specify a configuration file, ie. specifying \emph{user} will load the file \verb,dtu_letter_user.cfg, if available in the \LaTeX\ search directories or the folder containing the letter. The configuration file could contain the \verb,\dtuletterconfig, command with your default values. & \optempty\\
-%TO-name 	& The receiver name. & \optempty\\
-%TO-address	& The receiver address & \optempty\\
-%TO-zipcity	& The receiver zip and city (divided by a space) & \optempty\\
-%TO-country	& The receiver country & \optempty\\
-%TO-att		& The attention text & \optempty\\
-%date 		& The date text. & \verb,\today,\\
-%docID  		& Document ID & \optempty\\
-%author 		& Document author &\optempty\\
-%%%
-%DK-department 	& Danish department name used in the footer (you should not need to set this) & Set by department  \\
-%UK-department 	& English department name used in the footer (you should not need to set this) & Set by department  \\
-%DK-building 	& Building number for the Danish from address &\optempty\\
-%UK-building 	& Building number for the English from address &\optempty\\
-%DK-street 		& Street name for the Danish from address &\optempty\\
-%UK-street 		& Street name for the English from address &\optempty\\
-%DK-zipcity 		& Zip and city for the Danish from address &\optempty\\
-%UK-zipcity 		& Zip and city for the English from address &\optempty\\\\
-%phone			& Phone number & \optempty\\
-%fax				& FAX number. & \optempty\\
-%email 			& Email address & \optempty\\
-%webpage			& Webpage for the footer (ie. www.dtu.dk) & \optempty\\
-%cvr 			& The DTU VAT number & DK 30 06 09 46\\
-%phone-direct	& Direct phone number & \optempty\\
-%%
-%%
-%DK-lang-cvr 			& Word printed before the VAT number (Danish) 			& CVR-nr.  \\
-%DK-lang-phone 			& Word printed before the phone number (Danish) 		& Tlf      \\
-%DK-lang-phone-direct 	& Word printed before the direct phone number (Danish) 	& Dir      \\
-%DK-lang-fax 			& Word printed before the fax number (Danish)			& Fax      \\
-%DK-lang-att 			& Word printed before the attention text (Danish)		& Att.     \\
-%DK-lang-building 		& Word printed before the building text (Danish)		& Bygning  \\
-%UK-lang-dtu				& Offcial DTU name 										& Danmarks Tekniske Universitet\\
-%UK-lang-cvr 			& Word printed before the VAT number (English) 			& VAT no.  \\
-%UK-lang-phone 			& Word printed before the phone number (English) 		& Tel      \\
-%UK-lang-phone-direct 	& Word printed before the direct phone number (English) & Dir      \\
-%UK-lang-fax	 			& Word printed before the fax number (English)			& Fax      \\
-%UK-lang-att 			& Word printed before the attention text (English)		& Att.     \\
-%UK-lang-building  		& Word printed before the building text (English)		& Building  \\
-%UK-lang-dtu				& Offcial DTU name 										& Technical University of Denmark\\
+%bgcolor	& If you are printing on stationery paper you should specify this option (true, false) & dtulightblue, \textcolor{dtulightblue}{\rule{10pt}{10pt}} \\
+%licolor	& If you are printing on stationery paper you should specify this option (true, false) & dtuorange, \textcolor{dtuorange}{\rule{10pt}{10pt}} \\
+%
 %\hline
 %\end{longtable}
-
-
 
 
 
