@@ -85,6 +85,8 @@ function verdana {
   mv Verdanai.TTF $INST/fonts/truetype/ms/verdana/verdanai.ttf
   mv Verdanaz.TTF $INST/fonts/truetype/ms/verdana/verdanaz.ttf
   mv Verdana.TTF $INST/fonts/truetype/ms/verdana/verdana.ttf
+  mkdir -p ~/.fonts
+  cp $INST/fonts/truetype/ms/verdana/*.ttf ~/.fonts/
   popd
   # Append the new font name to the array of installed fonts
   MAPS+=("verdana")
@@ -150,7 +152,9 @@ function minion {
     ./scripts/install $INST
     #    echo "Enabling the map for $THEFONT"
     #    sudo updmap-sys --enable Map=$THEFONT.map
-    rm $TMPFONTPRO/otf/*.otf
+    # Cleaning up and adding the otfs  to the user dir (xelatex)
+    mkdir -p ~/.fonts
+    mv $TMPFONTPRO/otf/*.otf ~/.fonts/
     popd
   done 
   # Append the new font names to the array of installed fonts
