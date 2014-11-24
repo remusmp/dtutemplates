@@ -203,6 +203,10 @@
 %======================================================================
 %===  Use tikz to draw the background 
 %
+\tikzstyle{dtucoverbasenode} = [node distance=0.0em and 0.0em, line width=0em, outer sep=0.0em, inner sep=0em]
+\tikzstyle{dtucoverbacknode} = [dtucoverbasenode, color=\dtucover@bgcolor]
+\tikzstyle{dtucoverlinenode} = [dtucoverbasenode, color=\dtucover@licolor]
+%
 \DeclareDocumentCommand{\dtucover@drawbg}{ O{ } }{
   \ifthenelse{\isempty{#1}}{ %
     \IfFileExists{\thedepartmentLogo.pdf}
@@ -219,14 +223,14 @@
     \begin{pgfonlayer}{background} %
       \node [inner sep=0pt,above right] at (current page.north west){ %
         \begin{tikzpicture}[remember picture,overlay] %
-          \draw (\paperwidth-\dtucover@logoright, -\dtucover@logotop) node[inner sep=0pt, below left] {\includegraphics[width=\dtucover@logoright]{tex_dtu_logo}}; %
-          \draw (\dtucover@logoleft, -\paperheight+\dtucover@logobottom) node[inner sep=0pt, above right] {\dtucover@deplogo}; %
+          \draw (\paperwidth-\dtucover@logoright, -\dtucover@logotop) node[dtucoverbasenode, below left] {\includegraphics[width=\dtucover@logoright]{tex_dtu_logo}}; %
+          \draw (\dtucover@logoleft, -\paperheight+\dtucover@logobottom) node[dtucoverbasenode, above right] {\dtucover@deplogo}; %
           % These are the three tiles ...
           %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+0\dtucover@tilesheight); %
           %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
           %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
           % ... and this is the line on top
-          \filldraw[inner sep=0pt,color=\dtucover@licolor]    (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+.4pt) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
+          %\filldraw[dtucoverlinenode]  (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
         \end{tikzpicture} }; %
     \end{pgfonlayer} %
   \end{tikzpicture} %
@@ -240,15 +244,16 @@
       \node [inner sep=0pt,above right] at (current page.north west){ %
         \begin{tikzpicture}[remember picture,overlay]%
           % These are the three tiles ...
-          \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+0\dtucover@tilesheight); %
-         %\filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
-          \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          \filldraw[dtucoverbacknode] (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+0\dtucover@tilesheight); %
+         %\filldraw[dtucoverbacknode] (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          \filldraw[dtucoverbacknode] (\paperwidth-\dtucover@tilesouter-1\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight); %
+          \filldraw[dtucoverlinenode] (\paperwidth-\dtucover@tilesouter-2\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
           \ifthenelse{\isempty{#2}}{
           \newcommand\dtucover@defpic{\thedepartmentFrise}
-          \node[inner sep=0pt, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\includegraphics[height=0.833\dtucover@tilesheight,clip,trim=0mm 14mm 138.5mm 0mm]{\dtucover@defpic}}; %
-          %\node[inner sep=0pt, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\adjincludegraphics[height=0.833\dtucover@tilesheight,clip,trim={0 {.115\height} {.393\width} 0}]{\dtucover@defpic}}; %
+          \node[dtucoverbasenode, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\includegraphics[height=0.833\dtucover@tilesheight,clip,trim=0mm 14mm 138.5mm 0mm]{\dtucover@defpic}}; %
+          %\node[dtucoverbasenode, above left                 ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.0\dtucover@tilesheight) {\adjincludegraphics[height=0.833\dtucover@tilesheight,clip,trim={0 {.115\height} {.393\width} 0}]{\dtucover@defpic}}; %
           }{
-          \node[inner sep=0pt, left                      ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.5\dtucover@tilesheight) {\includegraphics[height=0.9\dtucover@tilesheight]{#2}}; %
+          \node[dtucoverbasenode, left                      ] at (\paperwidth-\dtucover@tilesouter-0\dtucover@tileswidth,-\paperheight+\dtucover@tilesbottom+1.5\dtucover@tilesheight) {\includegraphics[height=0.9\dtucover@tilesheight]{#2}}; %
           }
         \end{tikzpicture} }; %
     \end{pgfonlayer} %
@@ -293,9 +298,9 @@
       \node [inner sep=0pt,above right] at (current page.north west){ %
         \begin{tikzpicture}[remember picture,overlay] %
           % This is the coloured patch ...
-          \filldraw[inner sep=0pt,color=\dtucover@bgcolor]    (\dtucover@tilesouter,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesinner,-\paperheight+\dtucover@tilesbottom); %
+          \filldraw[dtucoverbacknode]    (\dtucover@tilesouter,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesinner,-\paperheight+\dtucover@tilesbottom); %
           % ... and this is the line on top
-          \filldraw[inner sep=0pt,color=\dtucover@licolor]    (\dtucover@tilesouter,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesinner,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
+          \filldraw[dtucoverlinenode]    (\dtucover@tilesouter,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight) rectangle (\paperwidth-\dtucover@tilesinner,-\paperheight+\dtucover@tilesbottom+2\dtucover@tilesheight+\dtucover@lineheight); %
         \end{tikzpicture} }; %
     \end{pgfonlayer} %
   \end{tikzpicture} %
