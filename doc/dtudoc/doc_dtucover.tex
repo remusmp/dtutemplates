@@ -1,6 +1,5 @@
 \documentclass[b5paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+
 \usepackage[english]{babel}
 \usepackage{verbatim,ifthen,xspace,blindtext,datetime}
 
@@ -10,6 +9,8 @@
   \setmainfont[Ligatures=TeX,Scale=MatchUppercase]{TimesNewRomanPSMT}
   \setsansfont[Ligatures=TeX,Scale=MatchUppercase]{Arial} 
 \else
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
   \usepackage{mathptmx}
   \usepackage[scaled]{uarial}
 \fi
@@ -21,25 +22,6 @@
 %  licolor=dtured         % the colour of the line
   ]{dtucover}
 %
-\newcommand\addInfo{%
-Gadenavn 00 \\ %
-Evt. Post Box 000 \\ %
-0000 Bynavn \\ %
-Tlf. 00000000 \\ %
-Fax 00000000 \\~ \\ %
-www.institut.dtu.dk %
-}
-
-\newcommand\addaddInfo{%
-\textbf{Partner Corporation} \\ ~ \\
-Gadenavn 00 \\ %
-Evt. Post Box 000 \\ %
-0000 Bynavn \\ %
-Tlf. 00000000 \\ %
-Fax 00000000 \\~ \\ %
-www.institut.dtu.dk %
-}
-
 % We start by drawing the cover page and putting test onto it
 \AtBeginDocument{
   \dtucoverThreeTiles % make the title page background
@@ -53,8 +35,101 @@ www.institut.dtu.dk %
 % ... and at the end, we need the back cover
 \AtEndDocument{
   \clearpage
-  \dtucoverBackMatter[\addInfo][\blindtext][\addaddInfo]
+  \dtucoverBackMatter%
+    [                                     Gadenavn 00 \\ Evt. Post Box 000 \\ 0000 Bynavn \\ Tlf. 00000000 \\ Fax 00000000 \\~ \\ www.institut.dtu.dk]%
+    [\blindtext]%
+    [\textbf{Partner Corporation} \\ ~ \\ Gadenavn 11 \\ Evt. Post Box 111 \\ 1111 Bynavn \\ Tlf. 11111111 \\ Fax 11111111 \\~ \\ www.partner.dtu.dk ]%
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Prepare the image files
+%
+\immediate\write18{rm doc_dtucover_adm.tex}
+\immediate\write18{del doc_dtucover_adm.tex}
+%
+\begin{filecontents}{doc_dtucover_adm.tex}
+\documentclass[b5paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{verbatim,ifthen,xspace,blindtext,datetime}
+%
+%\RequirePackage{ifxetex}
+\ifxetex
+  \usepackage{fontspec}
+  \setmainfont[Ligatures=TeX,Scale=MatchUppercase]{TimesNewRomanPSMT}
+  \setsansfont[Ligatures=TeX,Scale=MatchUppercase]{Arial} 
+\else
+  \usepackage{mathptmx}
+  \usepackage[scaled]{uarial}
+\fi
+%
+\usepackage{dtucover}
+%
+\begin{document}
+\dtucoverThreeTiles % make the title page background
+\dtucoverTitleText %
+  [Description of the options and examples] % This is the subtitle
+  {The \texttt{dtucover} package} % This is the title
+  {Manual} % This is the report type
+  {Jorrit Wronski \\ DTU Mechanical Engineering \\ \monthname{} \the\year} % This is the author information
+\clearpage
+\dtucoverBackMatter%
+  [                                     Gadenavn 00 \\ Evt. Post Box 000 \\ 0000 Bynavn \\ Tlf. 00000000 \\ Fax 00000000 \\~ \\ www.institut.dtu.dk]%
+  [\blindtext]%
+  [\textbf{Partner Corporation} \\ ~ \\ Gadenavn 11 \\ Evt. Post Box 111 \\ 1111 Bynavn \\ Tlf. 11111111 \\ Fax 11111111 \\~ \\ www.partner.dtu.dk ]%
+\end{document}
+\end{filecontents}
+\immediate\write18{pdflatex doc_dtucover_adm.tex}
+\immediate\write18{pdflatex doc_dtucover_adm.tex}
+%
+%
+\immediate\write18{rm doc_dtucover_mek_col_img.tex}
+\immediate\write18{del doc_dtucover_mek_col_img.tex}
+%
+\begin{filecontents}{doc_dtucover_mek_col_img.tex}
+\documentclass[b5paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{verbatim,ifthen,xspace,blindtext,datetime}
+%
+%\RequirePackage{ifxetex}
+\ifxetex
+  \usepackage{fontspec}
+  \setmainfont[Ligatures=TeX,Scale=MatchUppercase]{TimesNewRomanPSMT}
+  \setsansfont[Ligatures=TeX,Scale=MatchUppercase]{Arial} 
+\else
+  \usepackage{mathptmx}
+  \usepackage[scaled]{uarial}
+\fi
+%
+\usepackage[%
+  department=mekanik,    % select your department
+  bgcolor=dtulightgreen, % the colour of the tiles
+  licolor=dtured         % the colour of the line
+  ]{dtucover}
+%
+\begin{document}
+\dtucoverThreeTiles % make the title page background
+\dtucoverTitleText %
+  [Description of the options and examples] % This is the subtitle
+  {The \texttt{dtucover} package} % This is the title
+  {Manual} % This is the report type
+  {Jorrit Wronski \\ DTU Mechanical Engineering \\ \monthname{} \the\year} % This is the author information
+\clearpage
+\dtucoverBackMatter%
+  [                                     Gadenavn 00 \\ Evt. Post Box 000 \\ 0000 Bynavn \\ Tlf. 00000000 \\ Fax 00000000 \\~ \\ www.institut.dtu.dk]%
+  [\blindtext]%
+  [\textbf{Partner Corporation} \\ ~ \\ Gadenavn 11 \\ Evt. Post Box 111 \\ 1111 Bynavn \\ Tlf. 11111111 \\ Fax 11111111 \\~ \\ www.partner.dtu.dk ]%
+\end{document}
+\end{filecontents}
+\immediate\write18{pdflatex doc_dtucover_mek_col_img.tex}
+\immediate\write18{pdflatex doc_dtucover_mek_col_img.tex}
+%
+% Prepared the image files
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{document}
 
@@ -97,11 +172,23 @@ Some basic settings can be made when the package gets loaded. The three availabl
 
 \begin{figure}
 \centering
-\includegraphics[width=.2\linewidth,page=1]{doc_dtucover_adm} %
-\includegraphics[width=.2\linewidth,page=3]{doc_dtucover_adm} %
+\IfFileExists{doc_dtucover_adm.pdf}{ %
+  \includegraphics[width=.2\linewidth,page=1]{doc_dtucover_adm} %
+  \includegraphics[width=.2\linewidth,page=2]{doc_dtucover_adm} %
+}{ %
+  \typeout{ }
+  \typeout{------------------------------------------------------------------------------}
+  \typeout{Cannot find doc_dtucover_adm.pdf, rerun with the -shell-escape option.}
+} %
 \quad %
-\includegraphics[width=.2\linewidth,page=1]{doc_dtucover_mek_col_img} %
-\includegraphics[width=.2\linewidth,page=3]{doc_dtucover_mek_col_img} %
+\IfFileExists{doc_dtucover_mek_col_img.pdf}{ %
+  \includegraphics[width=.2\linewidth,page=1]{doc_dtucover_mek_col_img} %
+  \includegraphics[width=.2\linewidth,page=2]{doc_dtucover_mek_col_img} %
+}{ %
+  \typeout{Cannot find doc_dtucover_mek_col_img.pdf, rerun with the -shell-escape option.}
+  \typeout{------------------------------------------------------------------------------}
+  \errmessage{You are missing some important files}
+} %
 \caption{An example of the default settings and a customised cover}\label{fig:ex}
 \end{figure}
 
@@ -111,38 +198,5 @@ custom colours and specific images for the Department of Mechanical Engineering.
 
 The default example uses the command \texttt{\textbackslash usepackage\{dtucover\}} to load the package and the 
 second example was created with \texttt{\textbackslash usepackage[department=mekanik, bgcolor=dtulightgreen, licolor=dtured]\{dtucover\}}.  
-  
-
-
-
-%\AtBeginDocument{
-%  \dtucoverThreeTiles % make the title page background
-%  \dtucoverTitleText %
-%    [Description of the options and examples] % This is the subtitle
-%    {The \texttt{dtucover} package} % This is the title
-%    {Manual} % This is the report type
-%    {Jorrit Wronski \\ DTU Mechanical Engineering \\ \monthname{} \the\year} % This is the author information
-%}
-%% ... and at the end, we need the back cover
-%\AtEndDocument{
-%  \dtucoverBackMatter[\addInfo][\blindtext][\addaddInfo]
-%}
-
-
-%\chapter{The DTUcover Package}
-%The following table describes the options available. Please note that if you need to write a comma in the text for an option you need to enclose the text in curly braces, ie. \verb.author = {tps, als}..
-%
-%\begin{longtable}{>{\ttfamily}l >{\raggedright}p{0.4\textwidth} >{\ttfamily}p{0.2\textwidth}}
-%\hline
-%{\normalfont Option} & Description & {\normalfont Default Value}\\ \hline
-%department 	& Specify the department. This selects the correct department logo and text. Possible values are: \verb|aqua|, \verb|byg|, \verb|compute|, \verb|elektro|, \verb|energikonvertering|, \verb|fotonik|, \verb|fysik|, \verb|food|, \verb|kemi|, \verb|kemiteknik|, \verb|management|, \verb|mekanik|, \verb|miljo|, \verb|nanotek|, \verb|space|, \verb|systembiologi|, \verb|transport|, \verb|veterinaerinstituttet|, \verb|vindenergi|. & admin\\
-%bgcolor	& If you are printing on stationery paper you should specify this option (true, false) & dtulightblue, \textcolor{dtulightblue}{\rule{10pt}{10pt}} \\
-%licolor	& If you are printing on stationery paper you should specify this option (true, false) & dtuorange, \textcolor{dtuorange}{\rule{10pt}{10pt}} \\
-%
-%\hline
-%\end{longtable}
-
-
-
 
 \end{document}
