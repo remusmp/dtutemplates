@@ -21,7 +21,8 @@ SEP="<-------------------------------------------------->"
 #
 function testInstalled {
   APP="$1"
-  command -v "$APP" >/dev/null 2>&1 || { echo >&2 "Cannot find $APP - aborting."; exit 1; }
+  command -v "$APP" >/dev/null 2>&1 || { echo >&2 "Cannot find $APP - aborting. You can try installing it by running
+  sudo apt-get install $APP"; exit 1; }
   return 0
 }
 #
@@ -51,6 +52,17 @@ function getFile {
   fi
   return 0
 }  
+#   
+function nonfree {
+  APP="getnonfreefonts"
+  command -v "$APP" >/dev/null 2>&1 || { echo >&2 "Cannot find $APP. 
+  You might be able to install it by running:
+  wget http://tug.org/fonts/getnonfreefonts/install-getnonfreefonts; sudo texlua install-getnonfreefonts"; exit 1; }
+  #
+  THEFONT="$1"
+  getnonfreefonts $THEFONT
+  return 0
+}
 #
 function verdana {
   mkdir -p "$INST" "$TEMP"
@@ -73,6 +85,8 @@ function verdana {
   mv Verdanai.TTF $INST/fonts/truetype/ms/verdana/verdanai.ttf
   mv Verdanaz.TTF $INST/fonts/truetype/ms/verdana/verdanaz.ttf
   mv Verdana.TTF $INST/fonts/truetype/ms/verdana/verdana.ttf
+  mkdir -p ~/.fonts
+  cp $INST/fonts/truetype/ms/verdana/*.ttf ~/.fonts/
   popd
   # Append the new font name to the array of installed fonts
   MAPS+=("verdana")
@@ -138,7 +152,9 @@ function minion {
     ./scripts/install $INST
     #    echo "Enabling the map for $THEFONT"
     #    sudo updmap-sys --enable Map=$THEFONT.map
-    rm $TMPFONTPRO/otf/*.otf
+    # Cleaning up and adding the otfs  to the user dir (xelatex)
+    mkdir -p ~/.fonts
+    mv $TMPFONTPRO/otf/*.otf ~/.fonts/
     popd
   done 
   # Append the new font names to the array of installed fonts
@@ -212,6 +228,10 @@ elif [ "$FONT" = "minion" ]; then
   minion 
 elif [ "$FONT" = "myriad" ]; then
   minion
+elif [ "$FONT" = "arial" ]; then
+  nonfree "arial-urw"
+elif [ "$FONT" = "luximono" ]; then
+  nonfree "luximono"
 else
   echo "There is no function to install $FONT, terminating."
   exit 1
