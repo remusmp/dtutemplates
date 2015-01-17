@@ -10,8 +10,9 @@
 \RequirePackage{keyval}
 \RequirePackage{calc}
 
-% Enlarge slide size (default)
-\geometry{paperwidth=140mm, paperheight=105mm}
+% Enlarge slide size
+\beamer@paperwidth 1.09375\beamer@paperwidth%
+\beamer@paperheight 1.09375\beamer@paperheight%
 
 % Extra package
 \InputIfFileExists{departments}%
@@ -43,7 +44,6 @@
 \newcommand{\dimDTULogoHeight}{0.0777\paperheight} % Percent
 \newcommand{\dimDTULogoYOffset}{0.0404\paperheight} % Percent
 \newcommand{\dimDTULogoXOffset}{0.9176\paperwidth} % Percent
-\newcommand{\dimDTUWhiteLogoXOffset}{0.708\paperwidth} % Percent
 
 \newcommand{\dimDTUDepLogoXOffset}{0.062\paperwidth} % Percent
 \newcommand{\dimDTUDepLogoHeight}{0.0897\paperheight} % Percent
@@ -66,6 +66,7 @@
 \newcommand{\dimTextLeftMargin}{0.0669\paperwidth} % Percent
 
 \newcommand{\dimPlaceTitleInHeader}{-0.09\paperheight}
+
 
 \makeatletter
 \setbeamersize{text margin left=\dimTextLeftMargin, text margin right=\dimTextLeftMargin}
@@ -134,22 +135,16 @@
 \newcommand{\insertFrameDTULogo}
 {
 	\vspace{\dimDTULogoYOffset}
-	\hbox{
-		% The DTU Logo
-		\begin{beamercolorbox}[wd=0.99\paperwidth,left]{logo in head/foot}
-			\hspace{\dimDTULogoXOffset}\insertDTULogo
-		\end{beamercolorbox}
-	}
+	\begin{beamercolorbox}[right]{logo in head/foot}%
+		\insertDTULogo\makebox[\dimDTULogoWidth][]{}
+	\end{beamercolorbox}
 }
 \newcommand{\insertFrameDTUWhiteLogo}
 {
 	\vspace{\dimDTULogoYOffset}
-	\hbox{
-		% The DTU white logo
-		\begin{beamercolorbox}[wd=0.99\paperwidth,left]{logo in head/foot}
-			\hspace{\dimDTUWhiteLogoXOffset}\insertDTUWhiteLogo
-		\end{beamercolorbox}
-	}
+	\begin{beamercolorbox}[right]{logo in head/foot}%
+		\insertDTUWhiteLogo\makebox[\dimDTULogoWidth][]{}
+	\end{beamercolorbox}
 }
 
 % Command used in title page for inserting the DTU logo in headline
