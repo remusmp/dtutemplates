@@ -37,15 +37,15 @@
   \clearpage
   \dtucoverBackMatter%
     [                                     Gadenavn 00 \\ Evt. Post Box 000 \\ 0000 Bynavn \\ Tlf. 00000000 \\ Fax 00000000 \\~ \\ www.institut.dtu.dk]%
-    [\blindtext]%
+    [If you would like to create the documentation yourself (it might be a good test case), you either have to allow shell access \texttt{pdflatex -shell-escape doc\_dtucover} or run the following sequence as one line in your shell: \texttt{pdflatex -interaction=batchmode doc\_dtucover \& pdflatex doc\_dtucover\_adm \& pdflatex doc\_dtucover\_mek\_col\_img \& pdflatex doc\_dtucover}. \\ \blindtext]%
     [\textbf{Partner Corporation} \\ ~ \\ Gadenavn 11 \\ Evt. Post Box 111 \\ 1111 Bynavn \\ Tlf. 11111111 \\ Fax 11111111 \\~ \\ www.partner.dtu.dk ]%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Prepare the image files
 %
-\immediate\write18{rm doc_dtucover_adm.tex}
-\immediate\write18{del doc_dtucover_adm.tex}
+%\immediate\write18{rm doc_dtucover_adm.tex}
+%\immediate\write18{del doc_dtucover_adm.tex}
 %
 \begin{filecontents}{doc_dtucover_adm.tex}
 \documentclass[b5paper]{article}
