@@ -17,7 +17,7 @@
 % Times (text and math)
 %\usepackage{newtx, newtxmath}
 
-\usetheme[department=elektro]{DTU}
+\usetheme[department=vindenergi]{DTU}
 
 \title[DTU Templates]{DTU Beamer Template}
 \author{Remus M. Prunescu}
@@ -198,6 +198,16 @@
 		\end{axis}
 	\end{tikzpicture}
 	\end{figure}
+}
+
+\subsection{Frame Numbers}
+\frame{
+	\frametitle{Frame number instead of page number}
+	\setbeamercovered{transparent}
+	\begin{itemize}
+		\item<1-> Watch the frame number.
+		\item<2-> It doesn't change!
+	\end{itemize}
 }
 
 {
