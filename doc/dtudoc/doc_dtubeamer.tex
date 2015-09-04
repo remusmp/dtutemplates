@@ -9,15 +9,19 @@
 \usepackage{siunitx}
 
 % Latin Modern
-\usepackage{lmodern}
+%\usepackage{lmodern}
 % Verdana font type
 %\usepackage{verdana}
 % Helvetica
 %\usepackage{helvet}
 % Times (text and math)
 %\usepackage{newtx, newtxmath}
+% Nice font combination
+\usepackage{mathptmx} % math
+\usepackage{sourcesanspro} % sans-serif
+\usepackage{charter} % serif
 
-\usetheme[department=elektro]{DTU}
+\usetheme[department=miljo]{DTU}
 
 \title[DTU Templates]{DTU Beamer Template}
 \author{Remus M. Prunescu}
@@ -41,9 +45,15 @@
 \frame{
 	\frametitle{Installation}
 	
-	\begin{block}{Unix and Mac}
+	\begin{block}{Linux}
 		\begin{itemize}
 			\item Unzip the bundle to \texttt{\textasciitilde/texmf/}.
+		\end{itemize}
+	\end{block}
+	
+	\begin{block}{iOS (Mac)}
+		\begin{itemize}
+			\item Unzip the bundle to \texttt{\textasciitilde/Library/texmf/}.
 		\end{itemize}
 	\end{block}
 	
