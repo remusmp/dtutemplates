@@ -59,7 +59,7 @@ OS X:
 1. Open `Finder` then hold down the `Alt` key and go to `Go -> Library` and
    navigate to the `texmf` directory if it exists. If it doesn't then create it.
 
-![Step 1](screenshots/osx_step_1)
+![Step 1](/latex/dtutemplates/raw/master/screenshots/osx_step_1.png)
 
 2. Open the texmf directory
 
