@@ -94,13 +94,13 @@
 \ifdefstring{\inLanguage}{danish}
 {
 	\renewcommand{\institutetitle}{Danmarks Tekniske Universitet}
-	\renewcommand{\insertDTUWhiteLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_dk_a1_neg}}
+	\renewcommand{\insertDTUWhiteLogo}{\includegraphics[width=\dimDTULogoWidth]{tex_dtu_logo_white}}
 }
 {
 	\ifdefstring{\inLanguage}{english}
 	{
 		\renewcommand{\institutetitle}{Technical University of Denmark}
-		\renewcommand{\insertDTUWhiteLogo}{\includegraphics[height=\dimDTULogoHeight]{tex_dtu_uk_a1_neg}}
+		\renewcommand{\insertDTUWhiteLogo}{\includegraphics[width=\dimDTULogoWidth]{tex_dtu_logo_white}}
 	}
 	{
 		% Undefined language
@@ -222,8 +222,8 @@
 	\color{white}
 }
 \define@key{beamerframe}{bgfilename}{%
-	\setbeamertemplate{background}{
-		\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{#1}
+	\setbeamertemplate{background}{%
+		\includegraphics[width=\paperwidth,height=\paperheight]{#1}
 	}
 }
 % Default framestyle
